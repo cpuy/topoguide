@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, TopoguideActivity!</string>
+    <string name="app_name">Topoguide-android</string>
+    
+    <string name="no_topo">Pas de topo</string>
+    
+	<string name="menu_download">Download new topo</string>
+	<string name="menu_delete">Supprimer</string>
+    
+	<string name="download">Download</string>
+	
+	<string name="tab_info">Infos</string>
+	<string name="tab_acces">Acces</string>
+	<string name="tab_itinerary">Itineraire</string>
+	
+	<string name="infos_massif">Massif :</string>
+	<string name="infos_secteur">Secteur :</string>
+	<string name="infos_orientation">Orientation :</string>
+	
+	<string name="topo_itineraire_voie">Voie :</string>
+	<string name="topo_itineraire_orientation">Orientation :</string>
+	<string name="topo_itineraire_difficulte_ski">Ski :</string>
+	<string name="topo_itineraire_denivele">Denivele :</string>
+</resources>
