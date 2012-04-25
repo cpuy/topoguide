@@ -1,19 +1,16 @@
 package fr.colin.topoguide.model;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+import fr.colin.topoguide.model.unknown.UnknownSommet;
 
 public class Sommet implements Parcelable {
 
-   public static final String TABLE_SOMMET = "sommet";
-   public static String ID = "id";
-   public static String NOM = "nom";
-   public static String MASSIF = "massif";
-   public static String SECTEUR = "secteur";
-   public static String ALTITUDE = "altitude";
-
+   public static final Sommet UNKNOWN_SOMMET = new UnknownSommet();
+   
    public long id;
    public String nom;
    public String massif;
@@ -24,17 +21,45 @@ public class Sommet implements Parcelable {
  
    }
    
-   /**
-    * DB
-    */
-   public Sommet save(SQLiteDatabase db) {
-      ContentValues valeurs = new ContentValues();
-      valeurs.put(NOM, nom);
-      valeurs.put(MASSIF, massif);
-      valeurs.put(SECTEUR, secteur);
-      valeurs.put(ALTITUDE, altitude);
-      this.id = db.insert(TABLE_SOMMET, null, valeurs);
-      return this;
+   public Sommet clone() {
+      Sommet sommet = new Sommet();
+      sommet.id = id;
+      sommet.nom = nom;
+      sommet.massif = massif;
+      sommet.secteur = secteur;
+      sommet.altitude = altitude;
+      return sommet;
+   }
+
+   public boolean isUnknown() {
+      return false;
+   }
+
+   @Override
+   public boolean equals(final Object obj) {
+      if (obj instanceof Sommet) {
+         final Sommet other = (Sommet) obj;
+         return new EqualsBuilder()
+            .append(id, other.id)
+            .append(nom, other.nom)
+            .append(massif, other.massif)
+            .append(secteur, other.secteur)
+            .append(altitude, other.altitude)
+            .isEquals();
+      } else {
+         return false;
+      }
+   }
+
+   @Override
+   public int hashCode() {
+      return new HashCodeBuilder(17, 37)
+         .append(id)
+         .append(nom)
+         .append(massif)
+         .append(secteur)
+         .append(altitude)
+         .toHashCode();
    }
 
    /**

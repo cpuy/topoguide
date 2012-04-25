@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 import fr.colin.topoguide.html.SkitourPageParser;
+import fr.colin.topoguide.model.unknown.UnknownTopoGuide;
 
 public class TopoGuide implements Parcelable {
    public static final String TABLE_TOPOGUIDE = "topoguide";
@@ -21,6 +22,8 @@ public class TopoGuide implements Parcelable {
    public static final String TOPOGUIDE_NUMERO = "numero";
    public static final String TOPOGUIDE_REMARQUES = "remarques";
    public static final String TOPOGUIDE_SOMMET = "sommet";
+   
+   public static final TopoGuide UNKNOWN_TOPOGUIDE = new UnknownTopoGuide();
    
    /**
     * TODO clean tous ces champs nons utilisés
@@ -51,6 +54,10 @@ public class TopoGuide implements Parcelable {
 
    }
    
+   public boolean isUnknown() {
+      return false;
+   }
+   
    public static TopoGuide fromUrl(String url) throws IOException {
       return new SkitourPageParser(Jsoup.connect(url).get()).parsePage();
    }
@@ -65,14 +72,17 @@ public class TopoGuide implements Parcelable {
     * DB 
     */
    public long save(SQLiteDatabase db) {
-      sommet = sommet.save(db);
-      
       ContentValues valeurs = new ContentValues();
-      valeurs.put(TOPOGUIDE_SOMMET, sommet.id);
+      
+      if (sommet != null) {
+//         sommet = sommet.save(db);
+         valeurs.put(TOPOGUIDE_SOMMET, sommet.id);
+      }
       valeurs.put(TOPOGUIDE_NOM, this.nom);
       valeurs.put(TOPOGUIDE_ACCES, this.access);
       valeurs.put(TOPOGUIDE_ORIENTATION, this.orientation);
       valeurs.put(TOPOGUIDE_NUMERO, this.numero);
+      valeurs.put(TOPOGUIDE_REMARQUES, this.remarques);
       long topoId = db.insert(TABLE_TOPOGUIDE, null, valeurs);
       
       if (variantes != null) {

@@ -1,6 +1,6 @@
 CREATE TABLE depart (
   _id INTEGER PRIMARY KEY AUTOINCREMENT,
   nom TEXT NOT NULL, 
-  access TEXT NOT NULL, 
+  acces TEXT NOT NULL, 
   altitude INTEGER
 );

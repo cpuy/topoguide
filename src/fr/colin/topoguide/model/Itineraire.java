@@ -1,26 +1,20 @@
 package fr.colin.topoguide.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+import fr.colin.topoguide.model.unknown.UnknownItineraire;
+import fr.colin.topoguide.repository.ItineraireRepository;
 
 public class Itineraire implements Parcelable {
 
-   public static final String TABLE_ITINERAIRE = "itineraire";
-   public static final String VOIE = "voie";
-   public static final String ORIENTATION = "orientation";
-   public static final String DENIVELE = "denivele";
-   public static final String DIFFICULTE_SKI = "difficulte_ski";
-   public static final String DIFFICULTE_MONTEE = "difficulte_montee";
-   public static final String DESCRIPTION = "description";
-   public static final String MATERIEL = "materiel";
-   public static final String EXPOSITION = "exposition";
-   public static final String PENTE = "pente";
-   public static final String DUREE_JOUR = "duree_jour";
-   public static final String VARIANTE = "variante";
-   public static final String TOPO_ID = "topoguide";
-
+   public static final Itineraire UNKNOWN_ITINERAIRE = new UnknownItineraire();
+   
    public long id;
    public String voie;
    public String orientation;
@@ -33,45 +27,131 @@ public class Itineraire implements Parcelable {
    public int pente;
    public int dureeJour;
    public long topoId;
-   private Boolean variante;
+   private Boolean isVariante;
 
+   public Itineraire clone() {
+      Itineraire itineraire;
+      if (this.isVariante()) {
+         itineraire = variante();
+      } else {
+         itineraire = principal();
+      }
+      
+      itineraire.id = id;
+      itineraire.voie = voie;
+      itineraire.orientation = orientation;
+      itineraire.denivele = denivele;
+      itineraire.difficulteSki = difficulteSki;
+      itineraire.difficulteMontee = difficulteMontee;
+      itineraire.description = description;
+      itineraire.materiel = materiel;
+      itineraire.exposition = exposition;
+      itineraire.pente = pente;
+      itineraire.dureeJour = dureeJour;
+      itineraire.topoId = topoId;
+      return itineraire;
+   }
+   
    public Itineraire() {
    }
 
    public static Itineraire variante() {
       Itineraire itineraire = new Itineraire();
-      itineraire.variante = true;
+      itineraire.isVariante = true;
       return itineraire;
    }
 
    public static Itineraire principal() {
       Itineraire itineraire = new Itineraire();
-      itineraire.variante = false;
+      itineraire.isVariante = false;
       return itineraire;
    }
 
    public boolean isVariante() {
-      return variante;
+      return isVariante;
    }
 
+   
+   @Override
+   public boolean equals(final Object obj) {
+      if (obj instanceof Itineraire) {
+         final Itineraire other = (Itineraire) obj;
+         return new EqualsBuilder()
+            .append(id, other.id)
+            .append(voie, other.voie)
+            .append(orientation, other.orientation)
+            .append(denivele, other.denivele)
+            .append(difficulteSki, other.difficulteSki)
+            .append(difficulteMontee, other.difficulteMontee)
+            .append(description, other.description)
+            .append(materiel, other.materiel)
+            .append(exposition, other.exposition)
+            .append(pente, other.pente)
+            .append(dureeJour, other.dureeJour)
+            .append(topoId, other.topoId)
+            .append(isVariante, other.isVariante)
+            .isEquals();
+      } else {
+         return false;
+      }
+   }
+   
+   @Override
+   public int hashCode() {
+      return new HashCodeBuilder(17, 37)
+         .append(id)
+         .append(voie)
+         .append(orientation)
+         .append(denivele)
+         .append(difficulteSki)
+         .append(difficulteMontee)
+         .append(description)
+         .append(materiel)
+         .append(exposition)
+         .append(pente)
+         .append(dureeJour)
+         .append(topoId)
+         .append(isVariante)
+         .toHashCode();
+   }
+   
+   @Override
+   public String toString() {
+      return new ToStringBuilder(this)
+         .append("id", id)
+         .append("voie", voie)
+         .append("orientation", orientation)
+         .append("denivele", denivele)
+         .append("difficulteSki", difficulteSki)
+         .append("difficulteMontee", difficulteMontee)
+         .append("description", description)
+         .append("materiel", materiel)
+         .append("exposition", exposition)
+         .append("pente", pente)
+         .append("dureeJour", dureeJour)
+         .append("topoId", topoId)
+         .append("variante", isVariante)
+         .toString();
+   }
+   
    /**
     * DB
     */
    public Itineraire save(SQLiteDatabase db) {
       ContentValues valeurs = new ContentValues();
-      valeurs.put(VOIE, this.voie);
-      valeurs.put(ORIENTATION, this.orientation);
-      valeurs.put(DENIVELE, this.denivele);
-      valeurs.put(DIFFICULTE_SKI, this.difficulteSki);
-      valeurs.put(DIFFICULTE_MONTEE, this.difficulteMontee);
-      valeurs.put(DESCRIPTION, this.description);
-      valeurs.put(MATERIEL, this.materiel);
-      valeurs.put(EXPOSITION, this.exposition);
-      valeurs.put(PENTE, this.pente);
-      valeurs.put(DUREE_JOUR, this.dureeJour);
-      valeurs.put(VARIANTE, this.isVariante());
-      valeurs.put(TOPO_ID, this.topoId);
-      this.id = db.insert(TABLE_ITINERAIRE, null, valeurs);
+      valeurs.put(ItineraireRepository.VOIE, this.voie);
+      valeurs.put(ItineraireRepository.ORIENTATION, this.orientation);
+      valeurs.put(ItineraireRepository.DENIVELE, this.denivele);
+      valeurs.put(ItineraireRepository.DIFFICULTE_SKI, this.difficulteSki);
+      valeurs.put(ItineraireRepository.DIFFICULTE_MONTEE, this.difficulteMontee);
+      valeurs.put(ItineraireRepository.DESCRIPTION, this.description);
+      valeurs.put(ItineraireRepository.MATERIEL, this.materiel);
+      valeurs.put(ItineraireRepository.EXPOSITION, this.exposition);
+      valeurs.put(ItineraireRepository.PENTE, this.pente);
+      valeurs.put(ItineraireRepository.DUREE_JOUR, this.dureeJour);
+      valeurs.put(ItineraireRepository.VARIANTE, this.isVariante());
+      valeurs.put(ItineraireRepository.TOPO_ID, this.topoId);
+      this.id = db.insert(ItineraireRepository.TABLE, null, valeurs);
       return this;
    }
 
@@ -109,7 +189,7 @@ public class Itineraire implements Parcelable {
       dest.writeInt(pente);
       dest.writeInt(dureeJour);
       dest.writeLong(topoId);
-      dest.writeByte((byte) (variante ? 1 : 0));
+      dest.writeByte((byte) (isVariante ? 1 : 0));
    }
 
    private void readFromParcel(Parcel in) {
@@ -125,6 +205,10 @@ public class Itineraire implements Parcelable {
       pente = in.readInt();
       dureeJour = in.readInt();
       topoId = in.readInt();
-      variante = in.readByte() == 1;
+      isVariante = in.readByte() == 1;
+   }
+
+   public boolean isUnknown() {
+      return false;
    }
 }

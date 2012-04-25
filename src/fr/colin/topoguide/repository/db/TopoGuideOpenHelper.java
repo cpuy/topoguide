@@ -1,21 +1,22 @@
 package fr.colin.topoguide.repository.db;
 
-import static fr.colin.topoguide.model.Itineraire.TABLE_ITINERAIRE;
 import static fr.colin.topoguide.model.TopoGuide.TABLE_TOPOGUIDE;
+import static fr.colin.topoguide.repository.SommetRepository.TABLE_SOMMET;
 
 import java.io.InputStream;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import fr.colin.topoguide.model.Sommet;
+import fr.colin.topoguide.repository.DepartRepository;
+import fr.colin.topoguide.repository.ItineraireRepository;
 import fr.colin.topoguide.utils.IOUtils;
 import fr.colin.topoguide.views.R;
 
 public class TopoGuideOpenHelper extends SQLiteOpenHelper {
 
    private static final String BASE_NAME = "topoguide.db";
-   private static final int CURRENT_BASE_VERSION = 2;
+   private static final int CURRENT_BASE_VERSION = 1;
    
    private final Context context;
 
@@ -35,9 +36,10 @@ public class TopoGuideOpenHelper extends SQLiteOpenHelper {
    // TODO supprimer le bout de code
    @Override
    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-      db.execSQL("DROP TABLE " + TABLE_ITINERAIRE + ";");
+      db.execSQL("DROP TABLE " + ItineraireRepository.TABLE + ";");
       db.execSQL("DROP TABLE " + TABLE_TOPOGUIDE + ";");
-      db.execSQL("DROP TABLE " + Sommet.TABLE_SOMMET + ";");
+      db.execSQL("DROP TABLE " + TABLE_SOMMET + ";");
+      db.execSQL("DROP TABLE " + DepartRepository.TABLE + ";");
       onCreate(db);
    }
 
