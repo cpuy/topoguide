@@ -1,62 +1,52 @@
 package fr.colin.topoguide.database.table;
 
+import static fr.colin.topoguide.model.TopoGuide.UNKNOWN_TOPOGUIDE;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.model.TopoMinimal;
 
-/**
- * FIXME :
- *    - pb bd ne se close jamais
- *    - instanctiation d'un nouveau repo dans chaque activity
- *    
- * TODO :
- *    - nettoyage
- *    
- * @author colin
- *
- */
 public class TopoGuideTable extends Table<TopoGuide> {
 
    public static final String TABLE = "topoguide";
 
    public static final String NOM = "nom";
-   public static final String ACCES = "access";
    public static final String ORIENTATION = "orientation";
    public static final String NUMERO = "numero";
    public static final String REMARQUES = "remarques";
    public static final String SOMMET = "sommet";
+   public static final String DEPART = "depart";
 
-   public TopoGuideTable(SQLiteDatabase database) {
-      this.database = database;
-   }
-   
+   private static final String[] ALL_COLUMNS = { ID, NOM, ORIENTATION, NUMERO, REMARQUES, SOMMET, DEPART };
+
    protected ContentValues getInsertValues(TopoGuide topo) {
       ContentValues valeurs = new ContentValues();
       valeurs.put(NOM, topo.nom);
-      valeurs.put(ACCES, topo.access);
       valeurs.put(ORIENTATION, topo.orientation);
       valeurs.put(NUMERO, topo.numero);
       valeurs.put(REMARQUES, topo.remarques);
+      valeurs.put(SOMMET, topo.sommet.id);
+      valeurs.put(DEPART, topo.depart.id);
       return valeurs;
    }
 
    @Override
    protected TopoGuide cursorToModel(Cursor cursor) {
-      TopoGuide topo = TopoGuide.UNKNOWN_TOPOGUIDE;
+      TopoGuide topo = UNKNOWN_TOPOGUIDE;
       if (cursor.moveToFirst()) {
          topo = new TopoGuide();
          int i = 0;
          topo.id = cursor.getLong(i++);
          topo.nom = cursor.getString(i++);
-         topo.access = cursor.getString(i++);
          topo.orientation = cursor.getString(i++);
          topo.numero = cursor.getString(i++);
          topo.remarques = cursor.getString(i++);
+         topo.sommet.id = cursor.getLong(i++);
+         topo.depart.id = cursor.getLong(i++);
       }
       cursor.close();
       return topo;
@@ -96,7 +86,7 @@ public class TopoGuideTable extends Table<TopoGuide> {
 
    @Override
    protected String[] getAllColumns() {
-      return new String[] { ID, NOM, ACCES, ORIENTATION, NUMERO, REMARQUES, SOMMET };
+      return ALL_COLUMNS;
    }
 
 }

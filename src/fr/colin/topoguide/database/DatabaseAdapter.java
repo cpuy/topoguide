@@ -29,8 +29,4 @@ public abstract class DatabaseAdapter {
          database.close();
       }
    }
-   
-   protected String[] toStringArray(Object o) {
-      return new String[] { String.valueOf(o) };
-   }
 }

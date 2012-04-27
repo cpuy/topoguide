@@ -1,22 +1,26 @@
 package fr.colin.topoguide.model;
 
+import static fr.colin.topoguide.model.Depart.UNKNOWN_DEPART;
+import static fr.colin.topoguide.model.Itineraire.UNKNOWN_ITINERAIRE;
+import static fr.colin.topoguide.model.Sommet.UNKNOWN_SOMMET;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jsoup.Jsoup;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
-import fr.colin.topoguide.database.table.TopoGuideTable;
 import fr.colin.topoguide.html.SkitourPageParser;
 import fr.colin.topoguide.model.unknown.UnknownTopoGuide;
 
 public class TopoGuide implements Parcelable, Model {
+   
    public static final TopoGuide UNKNOWN_TOPOGUIDE = new UnknownTopoGuide();
    
    /**
@@ -27,119 +31,51 @@ public class TopoGuide implements Parcelable, Model {
    public String orientation;
    public String numero;
    public String remarques;
-   public Sommet sommet;
-   public Depart depart;
-   public List<String> imageUrls;
-
-   // TODO : a mettre dans depart
-   public String access;
+   public Sommet sommet = UNKNOWN_SOMMET;
+   public Depart depart = UNKNOWN_DEPART;
+   public Itineraire itineraire = UNKNOWN_ITINERAIRE;
+   public List<Itineraire> variantes = new ArrayList<Itineraire>();
    
    // TODO
    public String type;
+
+   public List<String> imageUrls;
+
    
-   // TODO juste une liste d'itineraire
-   public Itineraire itineraire;
-   public List<Itineraire> variantes;
    
    
    // public String cartes; TODO
 
+   // TODO constructeur avec Fields
    public TopoGuide() {
 
    }
    
-// TODO equals des objets et listes
    @Override
-   public boolean equals(final Object obj) {
-      if (obj instanceof TopoGuide) {
-         final TopoGuide other = (TopoGuide) obj;
-         return new EqualsBuilder()
-            .append(id, other.id)
-            .append(nom, other.nom)
-            .append(orientation, other.orientation)
-            .append(numero, other.numero)
-            .append(remarques, other.remarques)
-            .append(access, other.access)
-            .append(type, other.type)
-            .isEquals();
-      } else {
-         return false;
-      }
+   public void setId(long id) {
+      this.id = id;
    }
-   
-   
-   @Override
-   public int hashCode() {
-      return new HashCodeBuilder(17, 37)
-         .append(id)
-         .append(nom)
-         .append(orientation)
-         .append(numero)
-         .append(remarques)
-         .append(access)
-         .append(type)
-         .toHashCode();
-   }
-   
-   
-   // TODO clone des objets et listes
-   public TopoGuide clone() {
-      TopoGuide topo = new TopoGuide();
-      topo.access = access;
-      topo.id = id;
-      topo.imageUrls = imageUrls;
-      topo.itineraire = itineraire;
-      topo.nom = nom;
-      topo.numero = numero;
-      topo.orientation = orientation;
-      topo.remarques = remarques;
-      topo.sommet = sommet;
-      topo.type = type;
-      topo.variantes = variantes;
-      topo.depart = depart;
-      return topo;
-   }
-   
+
    public boolean isUnknown() {
       return false;
    }
    
+   /**
+    * TODO TO BE REMOVED
+    */
    public static TopoGuide fromUrl(String url) throws IOException {
       return new SkitourPageParser(Jsoup.connect(url).get()).parsePage();
    }
 
+   /**
+    * TODO TO BE REMOVED
+    */
    public static TopoGuide fromId(String id) throws IOException {
       TopoGuide topo = new SkitourPageParser(Jsoup.connect("http://www.skitour.fr/topos/," + id + ".html").get()).parsePage();
       topo.numero = id;
       return topo;
    }
 
-   /**
-    * DB 
-    */
-   public long save(SQLiteDatabase db) {
-      ContentValues valeurs = new ContentValues();
-      
-      if (sommet != null) {
-//         sommet = sommet.save(db);
-         valeurs.put(TopoGuideTable.SOMMET, sommet.id);
-      }
-      valeurs.put(TopoGuideTable.NOM, this.nom);
-      valeurs.put(TopoGuideTable.ACCES, this.access);
-      valeurs.put(TopoGuideTable.ORIENTATION, this.orientation);
-      valeurs.put(TopoGuideTable.NUMERO, this.numero);
-      valeurs.put(TopoGuideTable.REMARQUES, this.remarques);
-      long topoId = db.insert(TopoGuideTable.TABLE, null, valeurs);
-      
-      if (variantes != null) {
-         for (Itineraire itineraire : variantes) {
-            itineraire.topoId = topoId;
-            itineraire.save(db);
-         }
-      }
-      return topoId; 
-   }
-   
    /**
     * Parcelable
     */
@@ -164,7 +100,6 @@ public class TopoGuide implements Parcelable, Model {
    public void writeToParcel(Parcel dest, int flags) {
       dest.writeLong(id);
       dest.writeString(nom);
-      dest.writeString(access);
       dest.writeString(remarques);
       dest.writeString(orientation);
       dest.writeString(numero);
@@ -177,7 +112,6 @@ public class TopoGuide implements Parcelable, Model {
    private void readFromParcel(Parcel in) {
       id = in.readLong();
       nom = in.readString();
-      access = in.readString();
       remarques = in.readString();
       orientation = in.readString();
       numero = in.readString();
@@ -195,8 +129,71 @@ public class TopoGuide implements Parcelable, Model {
       in.readTypedList(variantes, Itineraire.CREATOR);
    }
 
+   public TopoGuide clone() {
+      TopoGuide topo = new TopoGuide();
+      topo.id = id;
+      topo.nom = nom;
+      topo.orientation = orientation;
+      topo.numero = numero;
+      topo.remarques = remarques;
+      topo.sommet = sommet.clone();
+      topo.depart = depart.clone();
+      topo.itineraire = itineraire.clone();
+      topo.variantes.addAll(variantes);
+      topo.type = type;
+      return topo;
+   }
+
    @Override
-   public void setId(long id) {
-      this.id = id;
+   public boolean equals(final Object obj) {
+      if (obj instanceof TopoGuide) {
+         final TopoGuide other = (TopoGuide) obj;
+         return new EqualsBuilder()
+            .append(id, other.id)
+            .append(nom, other.nom)
+            .append(orientation, other.orientation)
+            .append(numero, other.numero)
+            .append(remarques, other.remarques)
+            .append(sommet, other.sommet)
+            .append(depart, other.depart)
+            .append(itineraire, other.itineraire)
+            .append(variantes, other.variantes)
+            .append(type, other.type)
+            .isEquals();
+      } else {
+         return false;
+      }
+   }
+
+   @Override
+   public int hashCode() {
+      return new HashCodeBuilder(17, 37)
+         .append(id)
+         .append(nom)
+         .append(orientation)
+         .append(numero)
+         .append(remarques)
+         .append(sommet)
+         .append(depart)
+         .append(itineraire)
+         .append(variantes)
+         .append(type)
+         .toHashCode();
+   }
+
+   @Override
+   public String toString() {
+      return new ToStringBuilder(this, SHORT_PREFIX_STYLE)
+         .append("id", id)
+         .append("nom", nom)
+         .append("orientation", orientation)
+         .append("numero", numero)
+         .append("remarques", remarques)
+         .append("sommet", sommet)
+         .append("depart", depart)
+         .append("itineraire", itineraire)
+         .append("variantes", variantes)
+         .append("type", type)
+         .toString();
    }
 }

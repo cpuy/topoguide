@@ -3,7 +3,6 @@ package fr.colin.topoguide.html;
 import static fr.colin.topoguide.model.Itineraire.variante;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import org.jsoup.nodes.Document;
@@ -87,7 +86,8 @@ public class SkitourPageParser {
 
    private void parseGeneralInformations() {
       topoguide.nom = skitourPage.title();
-      topoguide.access = skitourPage.select("div.acces_topo").first().ownText();
+      if (topoguide.depart == null) topoguide.depart = new Depart();
+      topoguide.depart.acces = skitourPage.select("div.acces_topo").first().ownText();
       topoguide.remarques = skitourPage.select("div.rem_topo").first().ownText();
    }
 

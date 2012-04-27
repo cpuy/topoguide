@@ -3,7 +3,6 @@ package fr.colin.topoguide.database.table;
 import static fr.colin.topoguide.model.Sommet.UNKNOWN_SOMMET;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import fr.colin.topoguide.model.Sommet;
 
 public class SommetTable extends Table<Sommet> {
@@ -18,10 +17,6 @@ public class SommetTable extends Table<Sommet> {
 
    private static final String FIND_SAME_WHERE_CLAUSE = NOM + " = ? AND " + MASSIF + " = ? AND " + SECTEUR
          + " = ? AND " + ALTITUDE + " = ?";
-
-   public SommetTable(SQLiteDatabase database) {
-      this.database = database;
-   }
 
    public Sommet findSame(Sommet sommet) {
       Cursor cursor = database.query(TABLE_SOMMET, ALL_COLUMNS, FIND_SAME_WHERE_CLAUSE, new String[] {

@@ -28,11 +28,15 @@ public abstract class Table<T extends Model> {
       return cursorToModel(cursor);
    }
    
-   protected void deleteAll() {
+   public void deleteAll() {
       database.delete(getTableName(), null, null);
    }
    
    public void setDatabase(SQLiteDatabase database) {
       this.database = database;
+   }
+   
+   protected String[] toStringArray(Object o) {
+      return new String[] { String.valueOf(o) };
    }
 }

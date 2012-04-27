@@ -3,7 +3,6 @@ package fr.colin.topoguide.database.table;
 import static fr.colin.topoguide.model.Depart.UNKNOWN_DEPART;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import fr.colin.topoguide.model.Depart;
 
 public class DepartTable extends Table<Depart> {
@@ -13,10 +12,6 @@ public class DepartTable extends Table<Depart> {
    public static final String NOM = "nom";
    public static final String ACCES = "acces";
    public static final String ALTITUDE = "altitude";
-
-   public DepartTable(SQLiteDatabase database) {
-      this.database = database;
-   }
 
    @Override
    protected ContentValues getInsertValues(Depart depart) {

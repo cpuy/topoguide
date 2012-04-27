@@ -22,7 +22,7 @@ public class TopoGuideDetails extends Activity {
       Bundle extras = getIntent().getExtras();
       TopoGuide topoGuide = (TopoGuide) extras.getParcelable("current_topo");
       TextView tv = (TextView) findViewById(R.id.tvDetail);
-      tv.setText("Hello, Topo \nid: " + topoGuide.id +  "\nNom: " + topoGuide.nom + "\nMassif: " + topoGuide.sommet.massif + "\nAccess:" + topoGuide.access);
+      tv.setText("Hello, Topo \nid: " + topoGuide.id +  "\nNom: " + topoGuide.nom + "\nMassif: " + topoGuide.sommet.massif + "\nAccess:" + topoGuide.depart.acces);
       
       getExternalFilesDir(null);
       ImageView imageVIew = (ImageView) findViewById(R.id.ivTest);

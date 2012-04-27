@@ -17,7 +17,7 @@ import android.widget.ListView;
 import fr.colin.topoguide.database.table.TopoGuideTable;
 import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.repository.ImageRepository;
-import fr.colin.topoguide.repository.TopoGuideLocalRepository;
+import fr.colin.topoguide.repository.LocalTopoGuideRepository;
 import fr.colin.topoguide.views.adapter.TopoGuideListAdapter;
 
 /**
@@ -32,7 +32,7 @@ public class TopoGuideActivity extends ListActivity {
    private static final int INSERT_ID = Menu.FIRST;
    private static final int DELETE_ID = Menu.FIRST + 1;
 
-   private TopoGuideLocalRepository topoguideRepository;
+   private LocalTopoGuideRepository topoguideRepository;
 
    private ImageRepository imageRepository;
 
@@ -40,7 +40,7 @@ public class TopoGuideActivity extends ListActivity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.topo_list);
-      topoguideRepository = TopoGuideLocalRepository.fromContext(this);
+      topoguideRepository = LocalTopoGuideRepository.fromContext(this);
       topoguideRepository.open();
       imageRepository = new ImageRepository(this);
       fillData();
@@ -132,7 +132,7 @@ public class TopoGuideActivity extends ListActivity {
    protected void onListItemClick(ListView l, View v, int position, long id) {
       super.onListItemClick(l, v, position, id);
       Intent i = new Intent(this, TopoGuideDetailsTab.class);
-      i.putExtra("current_topo", topoguideRepository.findById(id));
+      i.putExtra("current_topo", topoguideRepository.findTopoById(id));
       startActivity(i);
    }
 }

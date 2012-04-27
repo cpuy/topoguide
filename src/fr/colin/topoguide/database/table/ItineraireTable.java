@@ -7,13 +7,12 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import fr.colin.topoguide.model.Itineraire;
 
 public class ItineraireTable extends Table<Itineraire> {
 
    public static final String TABLE = "itineraire";
-   
+
    public static final String VOIE = "voie";
    public static final String ORIENTATION = "orientation";
    public static final String DENIVELE = "denivele";
@@ -26,18 +25,16 @@ public class ItineraireTable extends Table<Itineraire> {
    public static final String DUREE_JOUR = "duree_jour";
    public static final String VARIANTE = "variante";
    public static final String TOPO_ID = "topoguide";
-   
-   private static String[] ALL_COLUMNS = new String[] { ID, VOIE, ORIENTATION, DENIVELE, DIFFICULTE_SKI, 
-      DIFFICULTE_MONTEE, DESCRIPTION, MATERIEL, EXPOSITION, PENTE, DUREE_JOUR, TOPO_ID, VARIANTE };
+
+   private static String[] ALL_COLUMNS = new String[] { ID, VOIE, ORIENTATION, DENIVELE, DIFFICULTE_SKI,
+         DIFFICULTE_MONTEE, DESCRIPTION, MATERIEL, EXPOSITION, PENTE, DUREE_JOUR, TOPO_ID, VARIANTE };
 
    private static final int VARIANTE_COLUMN_ID = ALL_COLUMNS.length - 1;
-   
-   private static final String FIND_PRINCIPAL_BY_TOPO_ID_WHERE_CLAUSE = TOPO_ID + " = ? AND " + VARIANTE + " = 0";
-   private static final String FIND_VARIANTES_BY_TOPO_ID_WHERE_CLAUSE = TOPO_ID + " = ? AND " + VARIANTE + " = 1";
 
-   public ItineraireTable(SQLiteDatabase database) {
-      this.database = database;
-   }
+   private static final String FIND_PRINCIPAL_BY_TOPO_ID_WHERE_CLAUSE = TOPO_ID + " = ? AND " + VARIANTE
+         + " = 0";
+   private static final String FIND_VARIANTES_BY_TOPO_ID_WHERE_CLAUSE = TOPO_ID + " = ? AND " + VARIANTE
+         + " = 1";
 
    @Override
    protected ContentValues getInsertValues(Itineraire itineraire) {
@@ -57,16 +54,15 @@ public class ItineraireTable extends Table<Itineraire> {
       return insertValues;
    }
 
-   
    public Itineraire findPrincipalByTopoId(long topoId) {
       Cursor cursor = database.query(TABLE, ALL_COLUMNS, FIND_PRINCIPAL_BY_TOPO_ID_WHERE_CLAUSE,
-            new String[] { String.valueOf(topoId) }, null, null, null);
+            toStringArray(topoId), null, null, null);
       return cursorToModel(cursor);
    }
-   
+
    public List<Itineraire> findVariantesByTopoId(long topoId) {
       Cursor cursor = database.query(TABLE, ALL_COLUMNS, FIND_VARIANTES_BY_TOPO_ID_WHERE_CLAUSE,
-            new String[] { String.valueOf(topoId) }, null, null, null);
+            toStringArray(topoId), null, null, null);
       return cursorToItineraires(cursor);
    }
 
@@ -79,7 +75,7 @@ public class ItineraireTable extends Table<Itineraire> {
       cursor.close();
       return itineraire;
    }
-   
+
    private List<Itineraire> cursorToItineraires(Cursor cursor) {
       ArrayList<Itineraire> itineraires = new ArrayList<Itineraire>();
       if (cursor.moveToFirst()) {
@@ -99,9 +95,10 @@ public class ItineraireTable extends Table<Itineraire> {
       } else {
          itineraire = Itineraire.variante();
       }
-      
+
       int i = 0;
-      itineraire.id = cursor.getLong(i++);;
+      itineraire.id = cursor.getLong(i++);
+      ;
       itineraire.voie = cursor.getString(i++);
       itineraire.orientation = cursor.getString(i++);
       itineraire.denivele = cursor.getInt(i++);
