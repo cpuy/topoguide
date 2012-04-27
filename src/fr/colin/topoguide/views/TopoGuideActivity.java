@@ -14,9 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
+import fr.colin.topoguide.database.table.TopoGuideTable;
 import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.repository.ImageRepository;
-import fr.colin.topoguide.repository.TopoGuideRepository;
+import fr.colin.topoguide.repository.TopoGuideLocalRepository;
 import fr.colin.topoguide.views.adapter.TopoGuideListAdapter;
 
 /**
@@ -31,7 +32,7 @@ public class TopoGuideActivity extends ListActivity {
    private static final int INSERT_ID = Menu.FIRST;
    private static final int DELETE_ID = Menu.FIRST + 1;
 
-   private TopoGuideRepository topoguideRepository;
+   private TopoGuideLocalRepository topoguideRepository;
 
    private ImageRepository imageRepository;
 
@@ -39,8 +40,8 @@ public class TopoGuideActivity extends ListActivity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.topo_list);
-      topoguideRepository = TopoGuideRepository.fromContext(this);
-//      topoguideRepository.open();
+      topoguideRepository = TopoGuideLocalRepository.fromContext(this);
+      topoguideRepository.open();
       imageRepository = new ImageRepository(this);
       fillData();
       registerForContextMenu(getListView());
@@ -50,21 +51,21 @@ public class TopoGuideActivity extends ListActivity {
       setListAdapter(new TopoGuideListAdapter(this, topoguideRepository.findAllMinimals()));
    }
 
-//   @Override
-//   protected void onPause() {
-//      if (topoguideRepository.isOpen()) {
-//         topoguideRepository.close();
-//      }
-//      super.onPause();
-//   }
-//
-//   @Override
-//   protected void onResume() {
-//      if (!topoguideRepository.isOpen()) {
-//         topoguideRepository.open();
-//      }
-//      super.onResume();
-//   }
+   @Override
+   protected void onPause() {
+      if (topoguideRepository.isOpen()) {
+         topoguideRepository.close();
+      }
+      super.onPause();
+   }
+
+   @Override
+   protected void onResume() {
+      if (!topoguideRepository.isOpen()) {
+         topoguideRepository.open();
+      }
+      super.onResume();
+   }
    
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {

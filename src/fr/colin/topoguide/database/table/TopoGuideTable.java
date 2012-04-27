@@ -1,10 +1,9 @@
-package fr.colin.topoguide.repository;
+package fr.colin.topoguide.database.table;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import fr.colin.topoguide.model.TopoGuide;
@@ -21,11 +20,10 @@ import fr.colin.topoguide.model.TopoMinimal;
  * @author colin
  *
  */
-public class TopoGuideRepository {
+public class TopoGuideTable extends Table<TopoGuide> {
 
    public static final String TABLE = "topoguide";
 
-   public static final String ID = "_id";
    public static final String NOM = "nom";
    public static final String ACCES = "access";
    public static final String ORIENTATION = "orientation";
@@ -33,25 +31,11 @@ public class TopoGuideRepository {
    public static final String REMARQUES = "remarques";
    public static final String SOMMET = "sommet";
 
-   private static String[] ALL_COLUMNS = new String[] { ID, NOM, ACCES, ORIENTATION, NUMERO, REMARQUES, SOMMET };
-   
-   private final SQLiteDatabase database;
-   
-   public static TopoGuideRepository fromContext(Context context) {
-      return null;
-   }
-   
-   public TopoGuideRepository(SQLiteDatabase database) {
+   public TopoGuideTable(SQLiteDatabase database) {
       this.database = database;
    }
    
-   public TopoGuide create(TopoGuide topo) {
-      TopoGuide t = topo.clone();
-      t.id = database.insert(TABLE, null, getInsertValues(t));
-      return t;
-   }
-   
-   private ContentValues getInsertValues(TopoGuide topo) {
+   protected ContentValues getInsertValues(TopoGuide topo) {
       ContentValues valeurs = new ContentValues();
       valeurs.put(NOM, topo.nom);
       valeurs.put(ACCES, topo.access);
@@ -61,12 +45,8 @@ public class TopoGuideRepository {
       return valeurs;
    }
 
-   public TopoGuide findById(long topoId) {
-      Cursor cursor = database.query(TABLE, ALL_COLUMNS, ID + " = " + topoId, null, null, null, null);
-      return cursorToTopoGuide(cursor);
-   }
-
-   private TopoGuide cursorToTopoGuide(Cursor cursor) {
+   @Override
+   protected TopoGuide cursorToModel(Cursor cursor) {
       TopoGuide topo = TopoGuide.UNKNOWN_TOPOGUIDE;
       if (cursor.moveToFirst()) {
          topo = new TopoGuide();
@@ -83,13 +63,13 @@ public class TopoGuideRepository {
    }
 
    public List<TopoMinimal> findAllMinimals() {
-      Cursor c = database.query(TopoGuideRepository.TABLE, new String[] { TopoGuideRepository.ID, TopoGuideRepository.NOM },
+      Cursor c = database.query(TopoGuideTable.TABLE, new String[] { TopoGuideTable.ID, TopoGuideTable.NOM },
             null, null, null, null, null);
       return cursorToTopoMinimal(c);
    }
    
    public Cursor findAllMinimalsC() {
-      return database.query(TopoGuideRepository.TABLE, new String[] { TopoGuideRepository.ID, TopoGuideRepository.NOM },
+      return database.query(TopoGuideTable.TABLE, new String[] { TopoGuideTable.ID, TopoGuideTable.NOM },
             null, null, null, null, null);
    }
 
@@ -108,8 +88,15 @@ public class TopoGuideRepository {
       c.close();
       return topos;
    }
-   
-   protected void deleteAll() {
-      database.delete(TopoGuideRepository.TABLE, null, null);
+
+   @Override
+   protected String getTableName() {
+      return TABLE;
    }
+
+   @Override
+   protected String[] getAllColumns() {
+      return new String[] { ID, NOM, ACCES, ORIENTATION, NUMERO, REMARQUES, SOMMET };
+   }
+
 }

@@ -1,4 +1,4 @@
-package fr.colin.topoguide.repository;
+package fr.colin.topoguide.database.table;
 
 import static fr.colin.topoguide.model.Sommet.UNKNOWN_SOMMET;
 import android.content.ContentValues;
@@ -6,10 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import fr.colin.topoguide.model.Sommet;
 
-public class SommetRepository {
+public class SommetTable extends Table<Sommet> {
 
    public static final String TABLE_SOMMET = "sommet";
-   public static String ID = "_id";
    public static String NOM = "nom";
    public static String MASSIF = "massif";
    public static String SECTEUR = "secteur";
@@ -20,40 +19,17 @@ public class SommetRepository {
    private static final String FIND_SAME_WHERE_CLAUSE = NOM + " = ? AND " + MASSIF + " = ? AND " + SECTEUR
          + " = ? AND " + ALTITUDE + " = ?";
 
-   private final SQLiteDatabase database;
-
-   public SommetRepository(SQLiteDatabase database) {
+   public SommetTable(SQLiteDatabase database) {
       this.database = database;
-   }
-
-   public Sommet create(Sommet sommet) {
-      ContentValues valeurs = new ContentValues();
-      valeurs.put(NOM, sommet.nom);
-      valeurs.put(MASSIF, sommet.massif);
-      valeurs.put(SECTEUR, sommet.secteur);
-      valeurs.put(ALTITUDE, sommet.altitude);
-
-      Sommet s = sommet.clone();
-      s.id = database.insert(TABLE_SOMMET, null, valeurs);
-      return s;
-   }
-
-   protected void deleteAll() {
-      database.delete(TABLE_SOMMET, null, null);
-   }
-
-   public Sommet findById(long sommetId) {
-      Cursor c = database.query(TABLE_SOMMET, ALL_COLUMNS, ID + " = " + sommetId, null, null, null, null);
-      return cursorToSommet(c);
    }
 
    public Sommet findSame(Sommet sommet) {
       Cursor cursor = database.query(TABLE_SOMMET, ALL_COLUMNS, FIND_SAME_WHERE_CLAUSE, new String[] {
             sommet.nom, sommet.massif, sommet.secteur, String.valueOf(sommet.altitude) }, null, null, null);
-      return cursorToSommet(cursor);
+      return cursorToModel(cursor);
    }
 
-   private Sommet cursorToSommet(Cursor cursor) {
+   protected Sommet cursorToModel(Cursor cursor) {
       Sommet sommet = UNKNOWN_SOMMET;
       if (cursor.moveToFirst()) {
          int i = 0;
@@ -66,5 +42,25 @@ public class SommetRepository {
       }
       cursor.close();
       return sommet;
+   }
+
+   @Override
+   protected String getTableName() {
+      return TABLE_SOMMET;
+   }
+
+   @Override
+   protected ContentValues getInsertValues(Sommet sommet) {
+      ContentValues valeurs = new ContentValues();
+      valeurs.put(NOM, sommet.nom);
+      valeurs.put(MASSIF, sommet.massif);
+      valeurs.put(SECTEUR, sommet.secteur);
+      valeurs.put(ALTITUDE, sommet.altitude);
+      return valeurs;
+   }
+
+   @Override
+   protected String[] getAllColumns() {
+      return ALL_COLUMNS;
    }
 }

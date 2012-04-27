@@ -1,4 +1,4 @@
-package fr.colin.topoguide.repository;
+package fr.colin.topoguide.database.table;
 
 import static fr.colin.topoguide.model.Itineraire.UNKNOWN_ITINERAIRE;
 
@@ -10,11 +10,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import fr.colin.topoguide.model.Itineraire;
 
-public class ItineraireRepository {
+public class ItineraireTable extends Table<Itineraire> {
 
    public static final String TABLE = "itineraire";
    
-   public static final String ID = "_id";
    public static final String VOIE = "voie";
    public static final String ORIENTATION = "orientation";
    public static final String DENIVELE = "denivele";
@@ -36,19 +35,12 @@ public class ItineraireRepository {
    private static final String FIND_PRINCIPAL_BY_TOPO_ID_WHERE_CLAUSE = TOPO_ID + " = ? AND " + VARIANTE + " = 0";
    private static final String FIND_VARIANTES_BY_TOPO_ID_WHERE_CLAUSE = TOPO_ID + " = ? AND " + VARIANTE + " = 1";
 
-   private final SQLiteDatabase database;
-   
-   public ItineraireRepository(SQLiteDatabase database) {
+   public ItineraireTable(SQLiteDatabase database) {
       this.database = database;
    }
 
-   public Itineraire create(Itineraire itineraire) {
-      Itineraire clone = itineraire.clone();
-      clone.id = database.insert(TABLE, null, getInsertValues(clone));
-      return clone;
-   }
-
-   private ContentValues getInsertValues(Itineraire itineraire) {
+   @Override
+   protected ContentValues getInsertValues(Itineraire itineraire) {
       ContentValues insertValues = new ContentValues();
       insertValues.put(VOIE, itineraire.voie);
       insertValues.put(ORIENTATION, itineraire.orientation);
@@ -69,7 +61,7 @@ public class ItineraireRepository {
    public Itineraire findPrincipalByTopoId(long topoId) {
       Cursor cursor = database.query(TABLE, ALL_COLUMNS, FIND_PRINCIPAL_BY_TOPO_ID_WHERE_CLAUSE,
             new String[] { String.valueOf(topoId) }, null, null, null);
-      return cursorToItineraire(cursor);
+      return cursorToModel(cursor);
    }
    
    public List<Itineraire> findVariantesByTopoId(long topoId) {
@@ -78,7 +70,8 @@ public class ItineraireRepository {
       return cursorToItineraires(cursor);
    }
 
-   private Itineraire cursorToItineraire(Cursor cursor) {
+   @Override
+   protected Itineraire cursorToModel(Cursor cursor) {
       Itineraire itineraire = UNKNOWN_ITINERAIRE;
       if (cursor.moveToFirst()) {
          itineraire = cursorRowToItineraire(cursor);
@@ -123,8 +116,13 @@ public class ItineraireRepository {
       return itineraire;
    }
 
-   /** For Testing */
-   protected void deleteAll() {
-      database.delete(TABLE, null, null);
+   @Override
+   protected String getTableName() {
+      return TABLE;
+   }
+
+   @Override
+   protected String[] getAllColumns() {
+      return ALL_COLUMNS;
    }
 }

@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import fr.colin.topoguide.database.table.TopoGuideTable;
 import fr.colin.topoguide.model.TopoGuide;
-import fr.colin.topoguide.repository.TopoGuideRepository;
 
 /**
  * TODO

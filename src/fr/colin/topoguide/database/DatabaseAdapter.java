@@ -1,13 +1,13 @@
-package fr.colin.topoguide.repository.db;
+package fr.colin.topoguide.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 public abstract class DatabaseAdapter {
 
-   private final Context context;
+   protected final Context context;
    
-   protected SQLiteDatabase database;
+   protected static SQLiteDatabase database;
    
    public DatabaseAdapter(Context context) {
       this.context = context;
@@ -19,7 +19,7 @@ public abstract class DatabaseAdapter {
    
    public void open() {
       if (!isOpen()) {
-         TopoGuideOpenHelper topoGuideOpenHelper = new TopoGuideOpenHelper(context);
+         DatabaseOpenHelper topoGuideOpenHelper = new DatabaseOpenHelper(context);
          database = topoGuideOpenHelper.getWritableDatabase();
       }
    }

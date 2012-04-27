@@ -12,11 +12,11 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+import fr.colin.topoguide.database.table.TopoGuideTable;
 import fr.colin.topoguide.html.SkitourPageParser;
 import fr.colin.topoguide.model.unknown.UnknownTopoGuide;
-import fr.colin.topoguide.repository.TopoGuideRepository;
 
-public class TopoGuide implements Parcelable {
+public class TopoGuide implements Parcelable, Model {
    public static final TopoGuide UNKNOWN_TOPOGUIDE = new UnknownTopoGuide();
    
    /**
@@ -96,6 +96,7 @@ public class TopoGuide implements Parcelable {
       topo.sommet = sommet;
       topo.type = type;
       topo.variantes = variantes;
+      topo.depart = depart;
       return topo;
    }
    
@@ -121,14 +122,14 @@ public class TopoGuide implements Parcelable {
       
       if (sommet != null) {
 //         sommet = sommet.save(db);
-         valeurs.put(TopoGuideRepository.SOMMET, sommet.id);
+         valeurs.put(TopoGuideTable.SOMMET, sommet.id);
       }
-      valeurs.put(TopoGuideRepository.NOM, this.nom);
-      valeurs.put(TopoGuideRepository.ACCES, this.access);
-      valeurs.put(TopoGuideRepository.ORIENTATION, this.orientation);
-      valeurs.put(TopoGuideRepository.NUMERO, this.numero);
-      valeurs.put(TopoGuideRepository.REMARQUES, this.remarques);
-      long topoId = db.insert(TopoGuideRepository.TABLE, null, valeurs);
+      valeurs.put(TopoGuideTable.NOM, this.nom);
+      valeurs.put(TopoGuideTable.ACCES, this.access);
+      valeurs.put(TopoGuideTable.ORIENTATION, this.orientation);
+      valeurs.put(TopoGuideTable.NUMERO, this.numero);
+      valeurs.put(TopoGuideTable.REMARQUES, this.remarques);
+      long topoId = db.insert(TopoGuideTable.TABLE, null, valeurs);
       
       if (variantes != null) {
          for (Itineraire itineraire : variantes) {
@@ -192,5 +193,10 @@ public class TopoGuide implements Parcelable {
          variantes = new ArrayList<Itineraire>();
       }
       in.readTypedList(variantes, Itineraire.CREATOR);
+   }
+
+   @Override
+   public void setId(long id) {
+      this.id = id;
    }
 }

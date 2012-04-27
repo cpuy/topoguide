@@ -1,4 +1,4 @@
-package fr.colin.topoguide.repository;
+package fr.colin.topoguide.database.table;
 
 import static fr.colin.topoguide.model.Depart.UNKNOWN_DEPART;
 import android.content.ContentValues;
@@ -6,30 +6,20 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import fr.colin.topoguide.model.Depart;
 
-public class DepartRepository {
+public class DepartTable extends Table<Depart> {
 
    public static final String TABLE = "depart";
 
-   public static final String ID = "_id";
    public static final String NOM = "nom";
    public static final String ACCES = "acces";
    public static final String ALTITUDE = "altitude";
 
-   private static String[] ALL_COLUMNS = new String[] { ID, NOM, ACCES, ALTITUDE };
-
-   private final SQLiteDatabase database;
-
-   public DepartRepository(SQLiteDatabase database) {
+   public DepartTable(SQLiteDatabase database) {
       this.database = database;
    }
 
-   public Depart create(Depart depart) {
-      Depart d = depart.clone();
-      d.id = database.insert(TABLE, null, getInsertValues(d));
-      return d;
-   }
-
-   private ContentValues getInsertValues(Depart depart) {
+   @Override
+   protected ContentValues getInsertValues(Depart depart) {
       ContentValues insertValues = new ContentValues();
       insertValues.put(NOM, depart.nom);
       insertValues.put(ACCES, depart.acces);
@@ -37,16 +27,8 @@ public class DepartRepository {
       return insertValues;
    }
 
-   protected void deleteAll() {
-      database.delete(TABLE, null, null);
-   }
-
-   public Depart findById(long departId) {
-      Cursor c = database.query(TABLE, ALL_COLUMNS, ID + " = " + departId, null, null, null, null);
-      return cursorToDepart(c);
-   }
-
-   private Depart cursorToDepart(Cursor cursor) {
+   @Override
+   protected Depart cursorToModel(Cursor cursor) {
       Depart depart = UNKNOWN_DEPART;
       if (cursor.moveToFirst()) {
          int i = 0;
@@ -59,4 +41,15 @@ public class DepartRepository {
       cursor.close();
       return depart;
    }
+
+   @Override
+   protected String getTableName() {
+      return TABLE;
+   }
+
+   @Override
+   protected String[] getAllColumns() {
+      return new String[] { ID, NOM, ACCES, ALTITUDE };
+   }
+
 }

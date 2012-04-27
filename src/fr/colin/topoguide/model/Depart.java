@@ -7,7 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import fr.colin.topoguide.model.unknown.UnknownDepart;
 
-public class Depart implements Parcelable {
+public class Depart implements Parcelable, Model {
 
    public static final Depart UNKNOWN_DEPART = new UnknownDepart();
    
@@ -91,5 +91,10 @@ public class Depart implements Parcelable {
       nom = in.readString();
       acces = in.readString();
       altitude = in.readInt();
+   }
+
+   @Override
+   public void setId(long id) {
+      this.id = id;
    }
 }

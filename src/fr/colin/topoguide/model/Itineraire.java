@@ -8,10 +8,10 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+import fr.colin.topoguide.database.table.ItineraireTable;
 import fr.colin.topoguide.model.unknown.UnknownItineraire;
-import fr.colin.topoguide.repository.ItineraireRepository;
 
-public class Itineraire implements Parcelable {
+public class Itineraire implements Parcelable, Model {
 
    public static final Itineraire UNKNOWN_ITINERAIRE = new UnknownItineraire();
    
@@ -139,19 +139,19 @@ public class Itineraire implements Parcelable {
     */
    public Itineraire save(SQLiteDatabase db) {
       ContentValues valeurs = new ContentValues();
-      valeurs.put(ItineraireRepository.VOIE, this.voie);
-      valeurs.put(ItineraireRepository.ORIENTATION, this.orientation);
-      valeurs.put(ItineraireRepository.DENIVELE, this.denivele);
-      valeurs.put(ItineraireRepository.DIFFICULTE_SKI, this.difficulteSki);
-      valeurs.put(ItineraireRepository.DIFFICULTE_MONTEE, this.difficulteMontee);
-      valeurs.put(ItineraireRepository.DESCRIPTION, this.description);
-      valeurs.put(ItineraireRepository.MATERIEL, this.materiel);
-      valeurs.put(ItineraireRepository.EXPOSITION, this.exposition);
-      valeurs.put(ItineraireRepository.PENTE, this.pente);
-      valeurs.put(ItineraireRepository.DUREE_JOUR, this.dureeJour);
-      valeurs.put(ItineraireRepository.VARIANTE, this.isVariante());
-      valeurs.put(ItineraireRepository.TOPO_ID, this.topoId);
-      this.id = db.insert(ItineraireRepository.TABLE, null, valeurs);
+      valeurs.put(ItineraireTable.VOIE, this.voie);
+      valeurs.put(ItineraireTable.ORIENTATION, this.orientation);
+      valeurs.put(ItineraireTable.DENIVELE, this.denivele);
+      valeurs.put(ItineraireTable.DIFFICULTE_SKI, this.difficulteSki);
+      valeurs.put(ItineraireTable.DIFFICULTE_MONTEE, this.difficulteMontee);
+      valeurs.put(ItineraireTable.DESCRIPTION, this.description);
+      valeurs.put(ItineraireTable.MATERIEL, this.materiel);
+      valeurs.put(ItineraireTable.EXPOSITION, this.exposition);
+      valeurs.put(ItineraireTable.PENTE, this.pente);
+      valeurs.put(ItineraireTable.DUREE_JOUR, this.dureeJour);
+      valeurs.put(ItineraireTable.VARIANTE, this.isVariante());
+      valeurs.put(ItineraireTable.TOPO_ID, this.topoId);
+      this.id = db.insert(ItineraireTable.TABLE, null, valeurs);
       return this;
    }
 
@@ -210,5 +210,10 @@ public class Itineraire implements Parcelable {
 
    public boolean isUnknown() {
       return false;
+   }
+
+   @Override
+   public void setId(long id) {
+      this.id = id;
    }
 }
