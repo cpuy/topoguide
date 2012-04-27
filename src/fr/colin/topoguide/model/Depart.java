@@ -7,7 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import fr.colin.topoguide.model.unknown.UnknownDepart;
 
-public class Depart implements Parcelable, Model {
+public class Depart implements Parcelable {
 
    public static final Depart UNKNOWN_DEPART = new UnknownDepart();
    
@@ -18,15 +18,6 @@ public class Depart implements Parcelable, Model {
    
    public Depart() {
 
-   }
-   
-   public Depart clone() {
-      Depart depart = new Depart();
-      depart.id = id;
-      depart.nom = nom;
-      depart.acces = acces;
-      depart.altitude = altitude;
-      return depart;
    }
    
    public boolean isUnknown() {
@@ -91,10 +82,5 @@ public class Depart implements Parcelable, Model {
       nom = in.readString();
       acces = in.readString();
       altitude = in.readInt();
-   }
-
-   @Override
-   public void setId(long id) {
-      this.id = id;
    }
 }

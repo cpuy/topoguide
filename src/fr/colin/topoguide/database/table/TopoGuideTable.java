@@ -12,7 +12,7 @@ import fr.colin.topoguide.model.TopoMinimal;
 
 public class TopoGuideTable extends Table<TopoGuide> {
 
-   public static final String TABLE = "topoguide";
+   public static final String TABLE_NAME = "topoguide";
 
    public static final String NOM = "nom";
    public static final String ORIENTATION = "orientation";
@@ -52,16 +52,26 @@ public class TopoGuideTable extends Table<TopoGuide> {
       return topo;
    }
 
+   // *********************************************************************/
+   // *********************************************************************/
+   /**
+    * TODO TODO
+    */
    public List<TopoMinimal> findAllMinimals() {
-      Cursor c = database.query(TopoGuideTable.TABLE, new String[] { TopoGuideTable.ID, TopoGuideTable.NOM },
+      Cursor c = database.query(TABLE_NAME, new String[] { ID, NOM },
             null, null, null, null, null);
       return cursorToTopoMinimal(c);
    }
    
+   /**
+    * TODO TODO
+    */
    public Cursor findAllMinimalsC() {
-      return database.query(TopoGuideTable.TABLE, new String[] { TopoGuideTable.ID, TopoGuideTable.NOM },
+      return database.query(TABLE_NAME, new String[] { ID, NOM },
             null, null, null, null, null);
    }
+   // *********************************************************************/
+   // *********************************************************************/
 
    private List<TopoMinimal> cursorToTopoMinimal(Cursor c) {
       List<TopoMinimal> topos = new ArrayList<TopoMinimal>();
@@ -81,7 +91,7 @@ public class TopoGuideTable extends Table<TopoGuide> {
 
    @Override
    protected String getTableName() {
-      return TABLE;
+      return TABLE_NAME;
    }
 
    @Override

@@ -3,9 +3,8 @@ package fr.colin.topoguide.database.table;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import fr.colin.topoguide.model.Model;
 
-public abstract class Table<T extends Model> {
+public abstract class Table<T> {
 
    protected static String ID = "_id";
    
@@ -16,19 +15,16 @@ public abstract class Table<T extends Model> {
    protected abstract String[] getAllColumns();
    protected abstract T cursorToModel(Cursor cursor);
    
-   @SuppressWarnings("unchecked")
-   public T create(T table) {
-      T t = (T) table.clone();
-      t.setId(database.insert(getTableName(), null, getInsertValues(t)));
-      return t;
+   public long add(T table) {
+      return database.insert(getTableName(), null, getInsertValues(table));
    }
 
-   public T findById(long id) {
+   public T get(long id) {
       Cursor cursor = database.query(getTableName(), getAllColumns(), ID + " = " + id, null, null, null, null);
       return cursorToModel(cursor);
    }
    
-   public void deleteAll() {
+   public void empty() {
       database.delete(getTableName(), null, null);
    }
    

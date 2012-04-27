@@ -49,26 +49,34 @@ public class LocalTopoGuideRepository extends DatabaseAdapter {
       return topo;
    }
 
+   private void createSommetAndDepartFirst(TopoGuide topo) {
+      topo.sommet.id = sommetTable.add(topo.sommet);
+      topo.depart.id = departTable.add(topo.depart);
+   }
+
    private TopoGuide thenCreateTopo(TopoGuide topo) {
-      topo = topoGuideTable.create(topo);
+      topo.id = topoGuideTable.add(topo);
       return topo;
    }
 
    private void finallyCreateItineraireAndVariantes(TopoGuide topo) {
+      createItineraire(topo);
+      createVariantes(topo);
+   }
+
+   private void createItineraire(TopoGuide topo) {
       topo.itineraire.topoId = topo.id;
-      topo.itineraire = itineraireTable.create(topo.itineraire);
-      
+      topo.itineraire.id = itineraireTable.add(topo.itineraire);
+   }
+
+   private void createVariantes(TopoGuide topo) {
       List<Itineraire> variantes = new ArrayList<Itineraire>();
       for (Itineraire variante : topo.variantes) {
          variante.topoId = topo.id;
-         variantes.add(itineraireTable.create(variante));
+         variante.id = itineraireTable.add(variante);
+         variantes.add(variante);
       }
       topo.variantes = variantes;
-   }
-
-   private void createSommetAndDepartFirst(TopoGuide topo) {
-      topo.sommet = sommetTable.create(topo.sommet);
-      topo.depart = departTable.create(topo.depart);
    }
 
    public List<TopoMinimal> findAllMinimals() {
@@ -76,20 +84,21 @@ public class LocalTopoGuideRepository extends DatabaseAdapter {
    }
 
    public TopoGuide findTopoById(long id) {
-      TopoGuide topo = topoGuideTable.findById(id);
+      TopoGuide topo = topoGuideTable.get(id);
       if (!topo.isUnknown()) {
-         topo.sommet = sommetTable.findById(topo.sommet.id);
-         topo.depart = departTable.findById(topo.depart.id);
+         topo.sommet = sommetTable.get(topo.sommet.id);
+         topo.depart = departTable.get(topo.depart.id);
          topo.itineraire = itineraireTable.findPrincipalByTopoId(topo.id);
          topo.variantes = itineraireTable.findVariantesByTopoId(topo.id);
       }
       return topo;
    }
 
+   /** For tests purpose */
    protected void empty() {
-      itineraireTable.deleteAll();
-      topoGuideTable.deleteAll();
-      sommetTable.deleteAll();
-      departTable.deleteAll();
+      itineraireTable.empty();
+      topoGuideTable.empty();
+      sommetTable.empty();
+      departTable.empty();
    }
 }

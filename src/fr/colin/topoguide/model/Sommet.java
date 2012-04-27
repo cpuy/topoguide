@@ -7,7 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import fr.colin.topoguide.model.unknown.UnknownSommet;
 
-public class Sommet implements Parcelable, Model {
+public class Sommet implements Parcelable {
 
    public static final Sommet UNKNOWN_SOMMET = new UnknownSommet();
    
@@ -19,16 +19,6 @@ public class Sommet implements Parcelable, Model {
 
    public Sommet() {
  
-   }
-   
-   public Sommet clone() {
-      Sommet sommet = new Sommet();
-      sommet.id = id;
-      sommet.nom = nom;
-      sommet.massif = massif;
-      sommet.secteur = secteur;
-      sommet.altitude = altitude;
-      return sommet;
    }
 
    public boolean isUnknown() {
@@ -97,10 +87,5 @@ public class Sommet implements Parcelable, Model {
       massif = in.readString();
       secteur = in.readString();
       altitude = in.readInt();
-   }
-
-   @Override
-   public void setId(long id) {
-      this.id = id;
    }
 }

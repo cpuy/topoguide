@@ -11,7 +11,7 @@ import android.os.Parcelable;
 import fr.colin.topoguide.database.table.ItineraireTable;
 import fr.colin.topoguide.model.unknown.UnknownItineraire;
 
-public class Itineraire implements Parcelable, Model {
+public class Itineraire implements Parcelable {
 
    public static final Itineraire UNKNOWN_ITINERAIRE = new UnknownItineraire();
    
@@ -29,29 +29,6 @@ public class Itineraire implements Parcelable, Model {
    public long topoId;
    private Boolean isVariante;
 
-   public Itineraire clone() {
-      Itineraire itineraire;
-      if (this.isVariante()) {
-         itineraire = variante();
-      } else {
-         itineraire = principal();
-      }
-      
-      itineraire.id = id;
-      itineraire.voie = voie;
-      itineraire.orientation = orientation;
-      itineraire.denivele = denivele;
-      itineraire.difficulteSki = difficulteSki;
-      itineraire.difficulteMontee = difficulteMontee;
-      itineraire.description = description;
-      itineraire.materiel = materiel;
-      itineraire.exposition = exposition;
-      itineraire.pente = pente;
-      itineraire.dureeJour = dureeJour;
-      itineraire.topoId = topoId;
-      return itineraire;
-   }
-   
    public Itineraire() {
    }
 
@@ -210,10 +187,5 @@ public class Itineraire implements Parcelable, Model {
 
    public boolean isUnknown() {
       return false;
-   }
-
-   @Override
-   public void setId(long id) {
-      this.id = id;
    }
 }

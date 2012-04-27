@@ -19,7 +19,7 @@ import android.os.Parcelable;
 import fr.colin.topoguide.html.SkitourPageParser;
 import fr.colin.topoguide.model.unknown.UnknownTopoGuide;
 
-public class TopoGuide implements Parcelable, Model {
+public class TopoGuide implements Parcelable {
    
    public static final TopoGuide UNKNOWN_TOPOGUIDE = new UnknownTopoGuide();
    
@@ -51,11 +51,6 @@ public class TopoGuide implements Parcelable, Model {
 
    }
    
-   @Override
-   public void setId(long id) {
-      this.id = id;
-   }
-
    public boolean isUnknown() {
       return false;
    }
@@ -127,21 +122,6 @@ public class TopoGuide implements Parcelable, Model {
          variantes = new ArrayList<Itineraire>();
       }
       in.readTypedList(variantes, Itineraire.CREATOR);
-   }
-
-   public TopoGuide clone() {
-      TopoGuide topo = new TopoGuide();
-      topo.id = id;
-      topo.nom = nom;
-      topo.orientation = orientation;
-      topo.numero = numero;
-      topo.remarques = remarques;
-      topo.sommet = sommet.clone();
-      topo.depart = depart.clone();
-      topo.itineraire = itineraire.clone();
-      topo.variantes.addAll(variantes);
-      topo.type = type;
-      return topo;
    }
 
    @Override
