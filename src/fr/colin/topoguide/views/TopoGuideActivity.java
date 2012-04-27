@@ -39,8 +39,8 @@ public class TopoGuideActivity extends ListActivity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.topo_list);
-      topoguideRepository = new TopoGuideRepository(this);
-      topoguideRepository.open();
+      topoguideRepository = TopoGuideRepository.fromContext(this);
+//      topoguideRepository.open();
       imageRepository = new ImageRepository(this);
       fillData();
       registerForContextMenu(getListView());
@@ -50,21 +50,21 @@ public class TopoGuideActivity extends ListActivity {
       setListAdapter(new TopoGuideListAdapter(this, topoguideRepository.findAllMinimals()));
    }
 
-   @Override
-   protected void onPause() {
-      if (topoguideRepository.isOpen()) {
-         topoguideRepository.close();
-      }
-      super.onPause();
-   }
-
-   @Override
-   protected void onResume() {
-      if (!topoguideRepository.isOpen()) {
-         topoguideRepository.open();
-      }
-      super.onResume();
-   }
+//   @Override
+//   protected void onPause() {
+//      if (topoguideRepository.isOpen()) {
+//         topoguideRepository.close();
+//      }
+//      super.onPause();
+//   }
+//
+//   @Override
+//   protected void onResume() {
+//      if (!topoguideRepository.isOpen()) {
+//         topoguideRepository.open();
+//      }
+//      super.onResume();
+//   }
    
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,11 +94,11 @@ public class TopoGuideActivity extends ListActivity {
 
       if (resultCode == RESULT_OK) {
          TopoGuide topo = (TopoGuide) intent.getExtras().getParcelable("downloaded_topo");
-         if (!topoguideRepository.isOpen()) {
-            topoguideRepository.open();
-         }
+//         if (!topoguideRepository.isOpen()) {
+//            topoguideRepository.open();
+//         }
          // TODO renvoyer id pour save, addImages avec un id et une list d'urls.
-         topo.id = topoguideRepository.save(topo);
+         topo = topoguideRepository.create(topo);
          try {
             imageRepository.addImagesForTopo(topo);
          } catch (IOException e) {
@@ -120,7 +120,7 @@ public class TopoGuideActivity extends ListActivity {
       switch (item.getItemId()) {
       case DELETE_ID:
          AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-         topoguideRepository.delete(info.id);
+//         topoguideRepository.delete(info.id);
          fillData();
          return true;
       }

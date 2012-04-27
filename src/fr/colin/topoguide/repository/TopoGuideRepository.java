@@ -1,24 +1,14 @@
 package fr.colin.topoguide.repository;
 
-import static fr.colin.topoguide.model.Sommet.UNKNOWN_SOMMET;
-import static fr.colin.topoguide.model.TopoGuide.TABLE_TOPOGUIDE;
-import static fr.colin.topoguide.model.TopoGuide.TOPOGUIDE_ID;
-import static fr.colin.topoguide.model.TopoGuide.TOPOGUIDE_NOM;
-import static fr.colin.topoguide.model.TopoGuide.UNKNOWN_TOPOGUIDE;
-import static fr.colin.topoguide.repository.SommetRepository.TABLE_SOMMET;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import fr.colin.topoguide.model.Itineraire;
-import fr.colin.topoguide.model.Sommet;
 import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.model.TopoMinimal;
-import fr.colin.topoguide.repository.db.TopoGuideOpenHelper;
 
 /**
  * FIXME :
@@ -33,114 +23,73 @@ import fr.colin.topoguide.repository.db.TopoGuideOpenHelper;
  */
 public class TopoGuideRepository {
 
-   public static final String ITINERAIRE_TOPO = "topoguide";
+   public static final String TABLE = "topoguide";
 
+   public static final String ID = "_id";
+   public static final String NOM = "nom";
+   public static final String ACCES = "access";
+   public static final String ORIENTATION = "orientation";
+   public static final String NUMERO = "numero";
+   public static final String REMARQUES = "remarques";
+   public static final String SOMMET = "sommet";
 
-   private SQLiteDatabase topoguideDB;
-   private TopoGuideOpenHelper topoGuideOpenHelper;
+   private static String[] ALL_COLUMNS = new String[] { ID, NOM, ACCES, ORIENTATION, NUMERO, REMARQUES, SOMMET };
    
-   public TopoGuideRepository(Context context) {
-      topoGuideOpenHelper = new TopoGuideOpenHelper(context);
+   private final SQLiteDatabase database;
+   
+   public static TopoGuideRepository fromContext(Context context) {
+      return null;
    }
    
-   public void open() {
-      topoguideDB = topoGuideOpenHelper.getWritableDatabase();
+   public TopoGuideRepository(SQLiteDatabase database) {
+      this.database = database;
    }
    
-   public void close() {
-      topoguideDB.close();
+   public TopoGuide create(TopoGuide topo) {
+      TopoGuide t = topo.clone();
+      t.id = database.insert(TABLE, null, getInsertValues(t));
+      return t;
    }
    
-   public boolean isOpen() {
-      return topoguideDB != null && topoguideDB.isOpen();
-   }
-
-   public long save(TopoGuide topo) {
-      return topo.save(topoguideDB);
-   }
-   
-   /** TODO sommet ?? */
-   public boolean delete(long id) {
-      return topoguideDB.delete(ItineraireRepository.TABLE, ITINERAIRE_TOPO + "=" + id, null) >0
-         && topoguideDB.delete(TABLE_TOPOGUIDE, TOPOGUIDE_ID + "=" + id, null) > 0;
-   }
-
-   private static final String FIND_TOPO_BY_ID = 
-         "SELECT * FROM " + TABLE_TOPOGUIDE + " t INNER JOIN " + TABLE_SOMMET + " s ON t.sommet = s._id WHERE t._id = ?";
-   
-   public TopoGuide findById(long id) {
-      Cursor c = topoguideDB.rawQuery(FIND_TOPO_BY_ID, new String[] {String.valueOf(id)});
-      
-      if (c.getCount() > 0) {
-         TopoGuide topo = cursorToTopoGuide(c);
-         topo.variantes = findVariantesByTopoId(id);
-         return topo;
-      } else {
-         return UNKNOWN_TOPOGUIDE;
-      }
+   private ContentValues getInsertValues(TopoGuide topo) {
+      ContentValues valeurs = new ContentValues();
+      valeurs.put(NOM, topo.nom);
+      valeurs.put(ACCES, topo.access);
+      valeurs.put(ORIENTATION, topo.orientation);
+      valeurs.put(NUMERO, topo.numero);
+      valeurs.put(REMARQUES, topo.remarques);
+      return valeurs;
    }
 
-   public Sommet findSommetById(long sommetId) {
-      return UNKNOWN_SOMMET;
-   }
-   
-   private List<Itineraire> findVariantesByTopoId(long id) {
-      Cursor c = topoguideDB.query(ItineraireRepository.TABLE, new String[] { ItineraireRepository.DENIVELE, ItineraireRepository.DESCRIPTION, ItineraireRepository.DIFFICULTE_SKI, ItineraireRepository.ORIENTATION, ItineraireRepository.VARIANTE }, TopoGuideRepository.ITINERAIRE_TOPO
-            + " = " + id, null, null, null, null);
-      return cursorToItineraire(c);
-   }
-
-   private List<Itineraire> cursorToItineraire(Cursor cursor) {
-      if (cursor.getCount() > 0) {
-      
-      Itineraire topo = Itineraire.variante();
-      cursor.moveToFirst();
-      int i = 0;
-      topo.denivele = cursor.getInt(i++);
-      topo.description = cursor.getString(i++);
-      
-//      topo.access = cursor.getString(i++);
-//      topo.secteur = cursor.getString(i++);
-//      topo.orientation = cursor.getString(i++);
-//      topo.numero = cursor.getString(i++);
-      cursor.close();
-      return Arrays.asList(topo);
-      }
-      else {
-         return new ArrayList<Itineraire>();
-      }
+   public TopoGuide findById(long topoId) {
+      Cursor cursor = database.query(TABLE, ALL_COLUMNS, ID + " = " + topoId, null, null, null, null);
+      return cursorToTopoGuide(cursor);
    }
 
    private TopoGuide cursorToTopoGuide(Cursor cursor) {
-      TopoGuide topo = new TopoGuide();
-      cursor.moveToFirst();
-      int i = 0;
-      topo.id = cursor.getLong(i++);
-      topo.nom = cursor.getString(i++);
-      topo.access = cursor.getString(i++);
-      topo.orientation = cursor.getString(i++);
-      topo.numero = cursor.getString(i++);
-      topo.remarques = cursor.getString(i++);
-      
-      Sommet sommet = new Sommet();
-      sommet.id = cursor.getLong(i++);
-      sommet.nom = cursor.getString(i++);
-      sommet.massif = cursor.getString(i++);
-      sommet.secteur = cursor.getString(i++);
-      topo.sommet = sommet;
-      
+      TopoGuide topo = TopoGuide.UNKNOWN_TOPOGUIDE;
+      if (cursor.moveToFirst()) {
+         topo = new TopoGuide();
+         int i = 0;
+         topo.id = cursor.getLong(i++);
+         topo.nom = cursor.getString(i++);
+         topo.access = cursor.getString(i++);
+         topo.orientation = cursor.getString(i++);
+         topo.numero = cursor.getString(i++);
+         topo.remarques = cursor.getString(i++);
+      }
       cursor.close();
       return topo;
    }
 
    public List<TopoMinimal> findAllMinimals() {
-      Cursor c = topoguideDB.query(TABLE_TOPOGUIDE, new String[] { TOPOGUIDE_ID, TOPOGUIDE_NOM },
+      Cursor c = database.query(TopoGuideRepository.TABLE, new String[] { TopoGuideRepository.ID, TopoGuideRepository.NOM },
             null, null, null, null, null);
       return cursorToTopoMinimal(c);
    }
    
    public Cursor findAllMinimalsC() {
-      return topoguideDB.query(TABLE_TOPOGUIDE, new String[] { TOPOGUIDE_ID, TOPOGUIDE_NOM },
+      return database.query(TopoGuideRepository.TABLE, new String[] { TopoGuideRepository.ID, TopoGuideRepository.NOM },
             null, null, null, null, null);
    }
 
@@ -160,10 +109,7 @@ public class TopoGuideRepository {
       return topos;
    }
    
-   public void deleteAll() {
-      topoguideDB.delete(ItineraireRepository.TABLE, null, null);
-      topoguideDB.delete(TABLE_TOPOGUIDE, null, null);
-      topoguideDB.delete(TABLE_SOMMET, null, null);
-      topoguideDB.delete(DepartRepository.TABLE, null, null);
+   protected void deleteAll() {
+      database.delete(TopoGuideRepository.TABLE, null, null);
    }
 }

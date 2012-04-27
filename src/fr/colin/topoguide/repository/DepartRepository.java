@@ -2,24 +2,25 @@ package fr.colin.topoguide.repository;
 
 import static fr.colin.topoguide.model.Depart.UNKNOWN_DEPART;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import fr.colin.topoguide.model.Depart;
-import fr.colin.topoguide.repository.db.DatabaseAdapter;
 
-public class DepartRepository extends DatabaseAdapter {
+public class DepartRepository {
 
    public static final String TABLE = "depart";
-   
+
    public static final String ID = "_id";
    public static final String NOM = "nom";
    public static final String ACCES = "acces";
    public static final String ALTITUDE = "altitude";
-   
+
    private static String[] ALL_COLUMNS = new String[] { ID, NOM, ACCES, ALTITUDE };
 
-   public DepartRepository(Context context) {
-      super(context);
+   private final SQLiteDatabase database;
+
+   public DepartRepository(SQLiteDatabase database) {
+      this.database = database;
    }
 
    public Depart create(Depart depart) {
@@ -42,21 +43,19 @@ public class DepartRepository extends DatabaseAdapter {
 
    public Depart findById(long departId) {
       Cursor c = database.query(TABLE, ALL_COLUMNS, ID + " = " + departId, null, null, null, null);
-      if (c.getCount() > 0) {
-         return cursorToDepart(c);
-      } else {
-         return UNKNOWN_DEPART;
-      }
+      return cursorToDepart(c);
    }
 
    private Depart cursorToDepart(Cursor cursor) {
-      Depart depart = new Depart();
-      int i = 0;
-      cursor.moveToFirst();
-      depart.id = cursor.getLong(i++);
-      depart.nom = cursor.getString(i++);
-      depart.acces = cursor.getString(i++);
-      depart.altitude = cursor.getInt(i++);
+      Depart depart = UNKNOWN_DEPART;
+      if (cursor.moveToFirst()) {
+         int i = 0;
+         depart = new Depart();
+         depart.id = cursor.getLong(i++);
+         depart.nom = cursor.getString(i++);
+         depart.acces = cursor.getString(i++);
+         depart.altitude = cursor.getInt(i++);
+      }
       cursor.close();
       return depart;
    }

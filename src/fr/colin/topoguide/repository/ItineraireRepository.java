@@ -6,12 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import fr.colin.topoguide.model.Itineraire;
-import fr.colin.topoguide.repository.db.DatabaseAdapter;
 
-public class ItineraireRepository extends DatabaseAdapter {
+public class ItineraireRepository {
 
    public static final String TABLE = "itineraire";
    
@@ -34,14 +33,19 @@ public class ItineraireRepository extends DatabaseAdapter {
 
    private static final int VARIANTE_COLUMN_ID = ALL_COLUMNS.length - 1;
    
-   public ItineraireRepository(Context context) {
-      super(context);
+   private static final String FIND_PRINCIPAL_BY_TOPO_ID_WHERE_CLAUSE = TOPO_ID + " = ? AND " + VARIANTE + " = 0";
+   private static final String FIND_VARIANTES_BY_TOPO_ID_WHERE_CLAUSE = TOPO_ID + " = ? AND " + VARIANTE + " = 1";
+
+   private final SQLiteDatabase database;
+   
+   public ItineraireRepository(SQLiteDatabase database) {
+      this.database = database;
    }
 
    public Itineraire create(Itineraire itineraire) {
-      Itineraire d = itineraire.clone();
-      d.id = database.insert(TABLE, null, getInsertValues(d));
-      return d;
+      Itineraire clone = itineraire.clone();
+      clone.id = database.insert(TABLE, null, getInsertValues(clone));
+      return clone;
    }
 
    private ContentValues getInsertValues(Itineraire itineraire) {
@@ -61,25 +65,28 @@ public class ItineraireRepository extends DatabaseAdapter {
       return insertValues;
    }
 
-   protected void deleteAll() {
-      database.delete(TABLE, null, null);
-   }
-
+   
    public Itineraire findPrincipalByTopoId(long topoId) {
-      String whereClause = TOPO_ID + " = " + topoId + " AND " + VARIANTE + " = 0";
-      Cursor cursor = database.query(TABLE, ALL_COLUMNS, whereClause, null, null, null, null);
-      if (cursor.moveToFirst()) {
-         return cursorRowToItineraire(cursor);
-      }
-      return UNKNOWN_ITINERAIRE;
+      Cursor cursor = database.query(TABLE, ALL_COLUMNS, FIND_PRINCIPAL_BY_TOPO_ID_WHERE_CLAUSE,
+            new String[] { String.valueOf(topoId) }, null, null, null);
+      return cursorToItineraire(cursor);
    }
-
+   
    public List<Itineraire> findVariantesByTopoId(long topoId) {
-      String whereClause = TOPO_ID + " = " + topoId + " AND " + VARIANTE + " = 1";
-      Cursor cursor = database.query(TABLE, ALL_COLUMNS, whereClause, null, null, null, null);
+      Cursor cursor = database.query(TABLE, ALL_COLUMNS, FIND_VARIANTES_BY_TOPO_ID_WHERE_CLAUSE,
+            new String[] { String.valueOf(topoId) }, null, null, null);
       return cursorToItineraires(cursor);
    }
 
+   private Itineraire cursorToItineraire(Cursor cursor) {
+      Itineraire itineraire = UNKNOWN_ITINERAIRE;
+      if (cursor.moveToFirst()) {
+         itineraire = cursorRowToItineraire(cursor);
+      }
+      cursor.close();
+      return itineraire;
+   }
+   
    private List<Itineraire> cursorToItineraires(Cursor cursor) {
       ArrayList<Itineraire> itineraires = new ArrayList<Itineraire>();
       if (cursor.moveToFirst()) {
@@ -114,5 +121,10 @@ public class ItineraireRepository extends DatabaseAdapter {
       itineraire.dureeJour = cursor.getInt(i++);
       itineraire.topoId = cursor.getLong(i++);
       return itineraire;
+   }
+
+   /** For Testing */
+   protected void deleteAll() {
+      database.delete(TABLE, null, null);
    }
 }

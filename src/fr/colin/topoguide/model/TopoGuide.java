@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jsoup.Jsoup;
 
 import android.content.ContentValues;
@@ -12,17 +14,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import fr.colin.topoguide.html.SkitourPageParser;
 import fr.colin.topoguide.model.unknown.UnknownTopoGuide;
+import fr.colin.topoguide.repository.TopoGuideRepository;
 
 public class TopoGuide implements Parcelable {
-   public static final String TABLE_TOPOGUIDE = "topoguide";
-   public static final String TOPOGUIDE_ID = "_id";
-   public static final String TOPOGUIDE_NOM = "nom";
-   public static final String TOPOGUIDE_ACCES = "access";
-   public static final String TOPOGUIDE_ORIENTATION = "orientation";
-   public static final String TOPOGUIDE_NUMERO = "numero";
-   public static final String TOPOGUIDE_REMARQUES = "remarques";
-   public static final String TOPOGUIDE_SOMMET = "sommet";
-   
    public static final TopoGuide UNKNOWN_TOPOGUIDE = new UnknownTopoGuide();
    
    /**
@@ -54,6 +48,57 @@ public class TopoGuide implements Parcelable {
 
    }
    
+// TODO equals des objets et listes
+   @Override
+   public boolean equals(final Object obj) {
+      if (obj instanceof TopoGuide) {
+         final TopoGuide other = (TopoGuide) obj;
+         return new EqualsBuilder()
+            .append(id, other.id)
+            .append(nom, other.nom)
+            .append(orientation, other.orientation)
+            .append(numero, other.numero)
+            .append(remarques, other.remarques)
+            .append(access, other.access)
+            .append(type, other.type)
+            .isEquals();
+      } else {
+         return false;
+      }
+   }
+   
+   
+   @Override
+   public int hashCode() {
+      return new HashCodeBuilder(17, 37)
+         .append(id)
+         .append(nom)
+         .append(orientation)
+         .append(numero)
+         .append(remarques)
+         .append(access)
+         .append(type)
+         .toHashCode();
+   }
+   
+   
+   // TODO clone des objets et listes
+   public TopoGuide clone() {
+      TopoGuide topo = new TopoGuide();
+      topo.access = access;
+      topo.id = id;
+      topo.imageUrls = imageUrls;
+      topo.itineraire = itineraire;
+      topo.nom = nom;
+      topo.numero = numero;
+      topo.orientation = orientation;
+      topo.remarques = remarques;
+      topo.sommet = sommet;
+      topo.type = type;
+      topo.variantes = variantes;
+      return topo;
+   }
+   
    public boolean isUnknown() {
       return false;
    }
@@ -76,14 +121,14 @@ public class TopoGuide implements Parcelable {
       
       if (sommet != null) {
 //         sommet = sommet.save(db);
-         valeurs.put(TOPOGUIDE_SOMMET, sommet.id);
+         valeurs.put(TopoGuideRepository.SOMMET, sommet.id);
       }
-      valeurs.put(TOPOGUIDE_NOM, this.nom);
-      valeurs.put(TOPOGUIDE_ACCES, this.access);
-      valeurs.put(TOPOGUIDE_ORIENTATION, this.orientation);
-      valeurs.put(TOPOGUIDE_NUMERO, this.numero);
-      valeurs.put(TOPOGUIDE_REMARQUES, this.remarques);
-      long topoId = db.insert(TABLE_TOPOGUIDE, null, valeurs);
+      valeurs.put(TopoGuideRepository.NOM, this.nom);
+      valeurs.put(TopoGuideRepository.ACCES, this.access);
+      valeurs.put(TopoGuideRepository.ORIENTATION, this.orientation);
+      valeurs.put(TopoGuideRepository.NUMERO, this.numero);
+      valeurs.put(TopoGuideRepository.REMARQUES, this.remarques);
+      long topoId = db.insert(TopoGuideRepository.TABLE, null, valeurs);
       
       if (variantes != null) {
          for (Itineraire itineraire : variantes) {
