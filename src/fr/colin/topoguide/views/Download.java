@@ -1,7 +1,6 @@
 package fr.colin.topoguide.views;
 
-import java.io.IOException;
-
+import static fr.colin.topoguide.repository.RemoteTopoGuideRepository.skitour;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +8,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import fr.colin.topoguide.database.table.TopoGuideTable;
 import fr.colin.topoguide.model.TopoGuide;
+import fr.colin.topoguide.repository.RepositoryException;
 
 /**
  * TODO
@@ -43,9 +42,12 @@ public class Download extends Activity {
    private void onClickButtonDownload() {
       EditText findViewById = (EditText) findViewById(R.id.topoId);
        try {
-         TopoGuide topo = TopoGuide.fromId(findViewById.getText().toString());
+         TopoGuide topo = skitour().fetchTopoById(Long.parseLong(findViewById.getText().toString()));
          setResult(RESULT_OK, new Intent().putExtra("downloaded_topo", topo));
-      } catch (IOException e) {
+      } catch (NumberFormatException e) {
+         setResult(RESULT_CANCELED);
+         e.printStackTrace();
+      } catch (RepositoryException e) {
          setResult(RESULT_CANCELED);
          e.printStackTrace();
       }

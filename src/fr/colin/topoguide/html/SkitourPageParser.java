@@ -32,7 +32,7 @@ public class SkitourPageParser {
    private static final int ITEMS_TOPO1_DIFFICULTE_SKI = 5;
    private static final int ITEMS_TOPO1_DUREE_JOUR = 7;
 
-   private final int numeroTopo;
+   private final long numeroTopo;
 
    private ArrayList<String> div_items_topo_1_lines;
    private ArrayList<String> div_items_topo_2_lines;
@@ -44,7 +44,7 @@ public class SkitourPageParser {
    private Element div_remarque;
    private Element lien_depart;
    
-   public SkitourPageParser(Document skitourPage, int numeroTopo) {
+   public SkitourPageParser(Document skitourPage, long numeroTopo) {
       this.numeroTopo = numeroTopo;
       splitPageIntoElements(skitourPage);
    }

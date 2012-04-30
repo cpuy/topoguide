@@ -5,18 +5,15 @@ import static fr.colin.topoguide.model.Itineraire.UNKNOWN_ITINERAIRE;
 import static fr.colin.topoguide.model.Sommet.UNKNOWN_SOMMET;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.jsoup.Jsoup;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import fr.colin.topoguide.html.SkitourPageParser;
 import fr.colin.topoguide.model.unknown.UnknownTopoGuide;
 
 public class TopoGuide implements Parcelable {
@@ -31,6 +28,7 @@ public class TopoGuide implements Parcelable {
    public String orientation;
    public String numero;
    public String remarques;
+   
    public Sommet sommet = UNKNOWN_SOMMET;
    public Depart depart = UNKNOWN_DEPART;
    public Itineraire itineraire = UNKNOWN_ITINERAIRE;
@@ -53,22 +51,6 @@ public class TopoGuide implements Parcelable {
    
    public boolean isUnknown() {
       return false;
-   }
-   
-//   /**
-//    * TODO TO BE REMOVED
-//    */
-//   public static TopoGuide fromUrl(String url) throws IOException {
-//      return new SkitourPageParser(Jsoup.connect(url).get()).parsePage();
-//   }
-
-   /**
-    * TODO TO BE REMOVED
-    */
-   public static TopoGuide fromId(String id) throws IOException {
-      TopoGuide topo = new SkitourPageParser(Jsoup.connect("http://www.skitour.fr/topos/," + id + ".html").get(), Integer.valueOf(id)).parsePage();
-      topo.numero = id;
-      return topo;
    }
 
    /**

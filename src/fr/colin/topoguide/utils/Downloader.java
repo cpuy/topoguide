@@ -1,4 +1,4 @@
-package fr.colin.topoguide.html;
+package fr.colin.topoguide.utils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -15,13 +15,10 @@ import org.jsoup.nodes.Document;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 public class Downloader {
 
-   private static final String SKITOUR_BASE_URL = "http://www.skitour.fr/topos/";
-
-   public Document downloadPage(String url) throws IOException {
+   public static Document downloadDocument(String url) throws IOException {
       return Jsoup.connect(url).get();
    }
 
