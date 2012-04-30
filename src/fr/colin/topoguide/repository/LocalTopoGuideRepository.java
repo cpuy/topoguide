@@ -9,7 +9,9 @@ import fr.colin.topoguide.database.table.DepartTable;
 import fr.colin.topoguide.database.table.ItineraireTable;
 import fr.colin.topoguide.database.table.SommetTable;
 import fr.colin.topoguide.database.table.TopoGuideTable;
+import fr.colin.topoguide.model.Depart;
 import fr.colin.topoguide.model.Itineraire;
+import fr.colin.topoguide.model.Sommet;
 import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.model.TopoMinimal;
 
@@ -34,6 +36,7 @@ public class LocalTopoGuideRepository extends DatabaseAdapter {
       this.itineraireTable = itineraireRepository;
    }
 
+   /** */
    public void open() {
       super.open();
       topoGuideTable.setDatabase(database);
@@ -42,16 +45,31 @@ public class LocalTopoGuideRepository extends DatabaseAdapter {
       itineraireTable.setDatabase(database);
    }
 
+   /** */
    public TopoGuide create(TopoGuide topo) {
-      createSommetAndDepartFirst(topo);
+      topo.depart = createDepartOrFetchItIfAlreadyExists(topo.depart);
+      topo.sommet = createSommetOrFetchItIfAlreadyExists(topo.sommet);
       topo = thenCreateTopo(topo);
       finallyCreateItineraireAndVariantes(topo);
       return topo;
    }
 
-   private void createSommetAndDepartFirst(TopoGuide topo) {
-      topo.sommet.id = sommetTable.add(topo.sommet);
-      topo.depart.id = departTable.add(topo.depart);
+   private Sommet createSommetOrFetchItIfAlreadyExists(Sommet sommet) {
+      Sommet s = sommetTable.get(sommet);
+      if (s.isUnknown()) {
+         s = sommet;
+         s.id = sommetTable.add(sommet);
+      } 
+      return s;
+   }
+
+   private Depart createDepartOrFetchItIfAlreadyExists(Depart depart) {
+      Depart d = departTable.get(depart);
+      if (d.isUnknown()) {
+         d = depart;
+         d.id = departTable.add(depart);
+      }
+      return d;
    }
 
    private TopoGuide thenCreateTopo(TopoGuide topo) {
@@ -79,10 +97,12 @@ public class LocalTopoGuideRepository extends DatabaseAdapter {
       topo.variantes = variantes;
    }
 
+   /** */
    public List<TopoMinimal> findAllMinimals() {
       return null;
    }
 
+   /** */
    public TopoGuide findTopoById(long id) {
       TopoGuide topo = topoGuideTable.get(id);
       if (!topo.isUnknown()) {

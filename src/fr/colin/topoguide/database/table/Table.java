@@ -1,5 +1,8 @@
 package fr.colin.topoguide.database.table;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,7 +35,15 @@ public abstract class Table<T> {
       this.database = database;
    }
    
-   protected String[] toStringArray(Object o) {
-      return new String[] { String.valueOf(o) };
+   protected String[] toStringArray(Object object) {
+      return new String[] { String.valueOf(object) };
+   }
+   
+   protected String[] toStringArray(Object... objects) {
+      List<String> strings = new ArrayList<String>();
+      for (Object o : objects) {
+         strings.add(String.valueOf(o));
+      }
+      return strings.toArray(new String[strings.size()]);
    }
 }

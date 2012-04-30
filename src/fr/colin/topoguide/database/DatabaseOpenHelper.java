@@ -1,6 +1,6 @@
 package fr.colin.topoguide.database;
 
-import static fr.colin.topoguide.database.table.SommetTable.TABLE_SOMMET;
+import static fr.colin.topoguide.database.table.SommetTable.TABLE_NAME;
 
 import java.io.InputStream;
 
@@ -38,7 +38,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
       db.execSQL("DROP TABLE " + ItineraireTable.TABLE + ";");
       db.execSQL("DROP TABLE " + TopoGuideTable.TABLE_NAME + ";");
-      db.execSQL("DROP TABLE " + TABLE_SOMMET + ";");
+      db.execSQL("DROP TABLE " + TABLE_NAME + ";");
       db.execSQL("DROP TABLE " + DepartTable.TABLE + ";");
       onCreate(db);
    }

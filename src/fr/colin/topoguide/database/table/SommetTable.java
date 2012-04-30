@@ -7,7 +7,7 @@ import fr.colin.topoguide.model.Sommet;
 
 public class SommetTable extends Table<Sommet> {
 
-   public static final String TABLE_SOMMET = "sommet";
+   public static final String TABLE_NAME = "sommet";
    public static String NOM = "nom";
    public static String MASSIF = "massif";
    public static String SECTEUR = "secteur";
@@ -18,12 +18,13 @@ public class SommetTable extends Table<Sommet> {
    private static final String FIND_SAME_WHERE_CLAUSE = NOM + " = ? AND " + MASSIF + " = ? AND " + SECTEUR
          + " = ? AND " + ALTITUDE + " = ?";
 
-   public Sommet findSame(Sommet sommet) {
-      Cursor cursor = database.query(TABLE_SOMMET, ALL_COLUMNS, FIND_SAME_WHERE_CLAUSE, new String[] {
-            sommet.nom, sommet.massif, sommet.secteur, String.valueOf(sommet.altitude) }, null, null, null);
+   public Sommet get(Sommet sommet) {
+      Cursor cursor = database.query(TABLE_NAME, ALL_COLUMNS, FIND_SAME_WHERE_CLAUSE,
+            toStringArray(sommet.nom, sommet.massif, sommet.secteur, sommet.altitude), null, null, null);
       return cursorToModel(cursor);
    }
 
+   @Override
    protected Sommet cursorToModel(Cursor cursor) {
       Sommet sommet = UNKNOWN_SOMMET;
       if (cursor.moveToFirst()) {
@@ -41,7 +42,7 @@ public class SommetTable extends Table<Sommet> {
 
    @Override
    protected String getTableName() {
-      return TABLE_SOMMET;
+      return TABLE_NAME;
    }
 
    @Override

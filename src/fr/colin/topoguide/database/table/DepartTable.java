@@ -13,6 +13,11 @@ public class DepartTable extends Table<Depart> {
    public static final String ACCES = "acces";
    public static final String ALTITUDE = "altitude";
 
+   private static final String[] ALL_COLUMNS = new String[] { ID, NOM, ACCES, ALTITUDE };
+
+   private static final String FIND_SAME_WHERE_CLAUSE = NOM + " = ? AND " + ACCES + " = ? AND " + ALTITUDE
+         + " = ?";
+
    @Override
    protected ContentValues getInsertValues(Depart depart) {
       ContentValues insertValues = new ContentValues();
@@ -44,7 +49,12 @@ public class DepartTable extends Table<Depart> {
 
    @Override
    protected String[] getAllColumns() {
-      return new String[] { ID, NOM, ACCES, ALTITUDE };
+      return ALL_COLUMNS;
    }
 
+   public Depart get(Depart depart) {
+      Cursor cursor = database.query(TABLE, ALL_COLUMNS, FIND_SAME_WHERE_CLAUSE,
+            toStringArray(depart.nom, depart.acces, depart.altitude), null, null, null);
+      return cursorToModel(cursor);
+   }
 }
