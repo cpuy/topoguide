@@ -21,11 +21,7 @@ public class Downloader {
 
    private static final String SKITOUR_BASE_URL = "http://www.skitour.fr/topos/";
 
-   public static Document downloadSkitourPage(String id) throws IOException {
-      return downloadPage(SKITOUR_BASE_URL + "," + id);
-   }
-
-   private static Document downloadPage(String url) throws IOException {
+   public Document downloadPage(String url) throws IOException {
       return Jsoup.connect(url).get();
    }
 

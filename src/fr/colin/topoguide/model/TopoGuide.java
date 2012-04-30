@@ -55,18 +55,18 @@ public class TopoGuide implements Parcelable {
       return false;
    }
    
-   /**
-    * TODO TO BE REMOVED
-    */
-   public static TopoGuide fromUrl(String url) throws IOException {
-      return new SkitourPageParser(Jsoup.connect(url).get()).parsePage();
-   }
+//   /**
+//    * TODO TO BE REMOVED
+//    */
+//   public static TopoGuide fromUrl(String url) throws IOException {
+//      return new SkitourPageParser(Jsoup.connect(url).get()).parsePage();
+//   }
 
    /**
     * TODO TO BE REMOVED
     */
    public static TopoGuide fromId(String id) throws IOException {
-      TopoGuide topo = new SkitourPageParser(Jsoup.connect("http://www.skitour.fr/topos/," + id + ".html").get()).parsePage();
+      TopoGuide topo = new SkitourPageParser(Jsoup.connect("http://www.skitour.fr/topos/," + id + ".html").get(), Integer.valueOf(id)).parsePage();
       topo.numero = id;
       return topo;
    }

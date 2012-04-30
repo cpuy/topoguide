@@ -20,8 +20,9 @@ public class Itineraire implements Parcelable {
    public String orientation;
    public int denivele;
    public String difficulteSki;
-   public String difficulteMontee;
    public String description;
+   
+   public String difficulteMontee;
    public String materiel;
    public int exposition;
    public int pente;
@@ -29,7 +30,7 @@ public class Itineraire implements Parcelable {
    public long topoId;
    private Boolean isVariante;
 
-   public Itineraire() {
+   protected Itineraire() {
    }
 
    public static Itineraire variante() {
