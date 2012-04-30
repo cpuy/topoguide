@@ -25,7 +25,7 @@ public class TopoGuide implements Parcelable {
     */
    public long id;
    public String nom;
-   public String numero;
+   public long numero;
    public String remarques;
    
    public Sommet sommet = UNKNOWN_SOMMET;
@@ -77,7 +77,7 @@ public class TopoGuide implements Parcelable {
       dest.writeLong(id);
       dest.writeString(nom);
       dest.writeString(remarques);
-      dest.writeString(numero);
+      dest.writeLong(numero);
       dest.writeParcelable(sommet, flags);
       dest.writeParcelable(depart, flags);
       dest.writeStringList(imageUrls);
@@ -88,7 +88,7 @@ public class TopoGuide implements Parcelable {
       id = in.readLong();
       nom = in.readString();
       remarques = in.readString();
-      numero = in.readString();
+      numero = in.readLong();
       sommet = in.readParcelable(Sommet.class.getClassLoader());
       depart = in.readParcelable(Depart.class.getClassLoader());
       

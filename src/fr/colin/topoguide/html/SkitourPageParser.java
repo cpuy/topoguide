@@ -32,8 +32,6 @@ public class SkitourPageParser {
    private static final int ITEMS_TOPO1_DIFFICULTE_SKI = 5;
    private static final int ITEMS_TOPO1_DUREE_JOUR = 7;
 
-   private final long numeroTopo;
-
    private ArrayList<String> div_items_topo_1_lines;
    private ArrayList<String> div_items_topo_2_lines;
 
@@ -44,8 +42,7 @@ public class SkitourPageParser {
    private Element div_remarque;
    private Element lien_depart;
    
-   public SkitourPageParser(Document skitourPage, long numeroTopo) {
-      this.numeroTopo = numeroTopo;
+   public SkitourPageParser(Document skitourPage) {
       splitPageIntoElements(skitourPage);
    }
 
@@ -86,7 +83,6 @@ public class SkitourPageParser {
       TopoGuide topoguide = new TopoGuide();
       topoguide.nom = title.ownText();
       topoguide.remarques = div_remarque.ownText();
-      topoguide.numero = String.valueOf(numeroTopo);
       return topoguide;
    }
 

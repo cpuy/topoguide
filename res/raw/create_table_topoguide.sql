@@ -1,7 +1,7 @@
 CREATE TABLE topoguide (
   _id INTEGER PRIMARY KEY AUTOINCREMENT,
   nom TEXT NOT NULL, 
-  numero TEXT NOT NULL,
+  numero INT NOT NULL,
   remarques TEXT,
   sommet INT NOT NULL,
   depart INT NOT NULL

@@ -30,7 +30,7 @@ public class ImageRepository {
       }
    }
    
-   public void createTopoImagesFolderIfNotExists(String numeroTopo) {
+   public void createTopoImagesFolderIfNotExists(long numeroTopo) {
       File folder = getTopoImageFolder(numeroTopo);
       if (!folder.exists()) {
          folder.mkdirs();
@@ -52,7 +52,7 @@ public class ImageRepository {
       return bitmaps;
    }
    
-   private File getTopoImageFolder(String numeroTopo) {
+   private File getTopoImageFolder(long numeroTopo) {
       return new File(applicationBaseFolder, "skitour_" + numeroTopo);
    }
 }

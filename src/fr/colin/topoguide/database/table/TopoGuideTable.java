@@ -40,7 +40,7 @@ public class TopoGuideTable extends Table<TopoGuide> {
          int i = 0;
          topo.id = cursor.getLong(i++);
          topo.nom = cursor.getString(i++);
-         topo.numero = cursor.getString(i++);
+         topo.numero = cursor.getLong(i++);
          topo.remarques = cursor.getString(i++);
          topo.sommet.id = cursor.getLong(i++);
          topo.depart.id = cursor.getLong(i++);

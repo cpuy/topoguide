@@ -14,7 +14,9 @@ public class RemoteTopoGuideRepository {
    
    public TopoGuide fetchTopoById(long topoId) throws RepositoryException {
       try {
-         return new SkitourPageParser(downloadDocument(skitourUrl(topoId)), topoId).parsePage();
+         TopoGuide topo = new SkitourPageParser(downloadDocument(skitourUrl(topoId))).parsePage();
+         topo.numero = topoId;
+         return topo;
       } catch (Throwable t) {
          throw new RepositoryException("An error occured when fetching topoguide from skitour", t);
       }
