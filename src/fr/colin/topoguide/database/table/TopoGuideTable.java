@@ -15,18 +15,16 @@ public class TopoGuideTable extends Table<TopoGuide> {
    public static final String TABLE_NAME = "topoguide";
 
    public static final String NOM = "nom";
-   public static final String ORIENTATION = "orientation";
    public static final String NUMERO = "numero";
    public static final String REMARQUES = "remarques";
    public static final String SOMMET = "sommet";
    public static final String DEPART = "depart";
 
-   private static final String[] ALL_COLUMNS = { ID, NOM, ORIENTATION, NUMERO, REMARQUES, SOMMET, DEPART };
+   private static final String[] ALL_COLUMNS = { ID, NOM, NUMERO, REMARQUES, SOMMET, DEPART };
 
    protected ContentValues getInsertValues(TopoGuide topo) {
       ContentValues valeurs = new ContentValues();
       valeurs.put(NOM, topo.nom);
-      valeurs.put(ORIENTATION, topo.orientation);
       valeurs.put(NUMERO, topo.numero);
       valeurs.put(REMARQUES, topo.remarques);
       valeurs.put(SOMMET, topo.sommet.id);
@@ -42,7 +40,6 @@ public class TopoGuideTable extends Table<TopoGuide> {
          int i = 0;
          topo.id = cursor.getLong(i++);
          topo.nom = cursor.getString(i++);
-         topo.orientation = cursor.getString(i++);
          topo.numero = cursor.getString(i++);
          topo.remarques = cursor.getString(i++);
          topo.sommet.id = cursor.getLong(i++);

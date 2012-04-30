@@ -25,7 +25,6 @@ public class TopoGuide implements Parcelable {
     */
    public long id;
    public String nom;
-   public String orientation;
    public String numero;
    public String remarques;
    
@@ -78,7 +77,6 @@ public class TopoGuide implements Parcelable {
       dest.writeLong(id);
       dest.writeString(nom);
       dest.writeString(remarques);
-      dest.writeString(orientation);
       dest.writeString(numero);
       dest.writeParcelable(sommet, flags);
       dest.writeParcelable(depart, flags);
@@ -90,7 +88,6 @@ public class TopoGuide implements Parcelable {
       id = in.readLong();
       nom = in.readString();
       remarques = in.readString();
-      orientation = in.readString();
       numero = in.readString();
       sommet = in.readParcelable(Sommet.class.getClassLoader());
       depart = in.readParcelable(Depart.class.getClassLoader());
@@ -113,7 +110,6 @@ public class TopoGuide implements Parcelable {
          return new EqualsBuilder()
             .append(id, other.id)
             .append(nom, other.nom)
-            .append(orientation, other.orientation)
             .append(numero, other.numero)
             .append(remarques, other.remarques)
             .append(sommet, other.sommet)
@@ -132,7 +128,6 @@ public class TopoGuide implements Parcelable {
       return new HashCodeBuilder(17, 37)
          .append(id)
          .append(nom)
-         .append(orientation)
          .append(numero)
          .append(remarques)
          .append(sommet)
@@ -148,7 +143,6 @@ public class TopoGuide implements Parcelable {
       return new ToStringBuilder(this, SHORT_PREFIX_STYLE)
          .append("id", id)
          .append("nom", nom)
-         .append("orientation", orientation)
          .append("numero", numero)
          .append("remarques", remarques)
          .append("sommet", sommet)

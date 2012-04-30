@@ -16,6 +16,6 @@ public class Infos extends Activity {
       TopoGuide topoGuide = (TopoGuide) extras.getParcelable("current_topo");
       ((TextView) findViewById(R.id.infos_massif)).setText(topoGuide.sommet.massif);
       ((TextView) findViewById(R.id.infos_secteur)).setText(topoGuide.sommet.secteur);
-      ((TextView) findViewById(R.id.infos_orientation)).setText(topoGuide.orientation);
+      ((TextView) findViewById(R.id.infos_orientation)).setText(topoGuide.itineraire.orientation);
    }
 }
