@@ -18,8 +18,10 @@ import android.graphics.BitmapFactory;
 
 public class Downloader {
 
+   private static final String USER_AGENT = "Topoguide Android v0.1";
+   
    public static Document downloadDocument(String url) throws IOException {
-      return Jsoup.connect(url).get();
+      return Jsoup.connect(url).userAgent(USER_AGENT).get();
    }
 
    /**
