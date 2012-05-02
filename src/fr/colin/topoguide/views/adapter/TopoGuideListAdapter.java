@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import fr.colin.topoguide.model.TopoMinimal;
+import fr.colin.topoguide.model.view.TopoListItem;
 import fr.colin.topoguide.views.R;
 
 /**
@@ -26,12 +26,12 @@ import fr.colin.topoguide.views.R;
  */
 public class TopoGuideListAdapter extends BaseAdapter {
 
-   private final List<TopoMinimal> topos;
+   private final List<TopoListItem> topos;
    private final Context context;
    
    List<Object> items;
 
-   public TopoGuideListAdapter(Context context, List<TopoMinimal> topos) {
+   public TopoGuideListAdapter(Context context, List<TopoListItem> topos) {
       this.context = context;
       this.topos = topos;
       buildItemList();
@@ -39,10 +39,10 @@ public class TopoGuideListAdapter extends BaseAdapter {
 
    private void buildItemList() {
       items = new ArrayList<Object>();
-      Map<String, List<TopoMinimal>> massifTopo = new HashMap<String, List<TopoMinimal>>();
-      for (TopoMinimal topo : topos) {
+      Map<String, List<TopoListItem>> massifTopo = new HashMap<String, List<TopoListItem>>();
+      for (TopoListItem topo : topos) {
           if (massifTopo.get(topo.massif) == null) {
-             massifTopo.put(topo.massif, new ArrayList<TopoMinimal>());
+             massifTopo.put(topo.massif, new ArrayList<TopoListItem>());
           }
           massifTopo.get(topo.massif).add(topo);
       }
@@ -61,7 +61,7 @@ public class TopoGuideListAdapter extends BaseAdapter {
    @Override
    public boolean isEnabled(int position) {
       Object item = getItem(position);
-      if (item instanceof TopoMinimal) {
+      if (item instanceof TopoListItem) {
          return true;
       }
       else {
@@ -79,8 +79,8 @@ public class TopoGuideListAdapter extends BaseAdapter {
 
    public long getItemId(int position) {
       Object item = getItem(position);
-      if (item instanceof TopoMinimal) {
-         return ((TopoMinimal) getItem(position)).id;
+      if (item instanceof TopoListItem) {
+         return ((TopoListItem) getItem(position)).id;
       }
       else {
          return -1;
@@ -89,8 +89,8 @@ public class TopoGuideListAdapter extends BaseAdapter {
 
    public View getView(int position, View convertView, ViewGroup parent) {
       Object item = getItem(position);
-      if (item instanceof TopoMinimal) {
-         return itemView((TopoMinimal) item);
+      if (item instanceof TopoListItem) {
+         return itemView((TopoListItem) item);
       }
       else {
          return headerView((String) item);
@@ -104,7 +104,7 @@ public class TopoGuideListAdapter extends BaseAdapter {
       return view;
    }
    
-   private TextView itemView(TopoMinimal topo) {
+   private TextView itemView(TopoListItem topo) {
       LayoutInflater inflater = LayoutInflater.from(context);
       TextView view = (TextView) inflater.inflate(R.layout.topoguide_row, null);
       view.setText(topo.nom);

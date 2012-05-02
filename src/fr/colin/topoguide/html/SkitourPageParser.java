@@ -15,8 +15,8 @@ import org.jsoup.select.Elements;
 
 import fr.colin.topoguide.model.Depart;
 import fr.colin.topoguide.model.Itineraire;
-import fr.colin.topoguide.model.Itineraire.Orientation;
-import fr.colin.topoguide.model.Itineraire.Type;
+import fr.colin.topoguide.model.Type;
+import fr.colin.topoguide.model.enums.Orientation;
 import fr.colin.topoguide.model.Sommet;
 import fr.colin.topoguide.model.TopoGuide;
 

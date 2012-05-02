@@ -68,6 +68,7 @@ public class TopoGuide implements Parcelable {
       dest.writeLong(numero);
       dest.writeParcelable(sommet, flags);
       dest.writeParcelable(depart, flags);
+      dest.writeParcelable(itineraire, flags);
       dest.writeStringList(imageUrls);
       dest.writeTypedList(variantes);
    }
@@ -79,6 +80,7 @@ public class TopoGuide implements Parcelable {
       numero = in.readLong();
       sommet = in.readParcelable(Sommet.class.getClassLoader());
       depart = in.readParcelable(Depart.class.getClassLoader());
+      itineraire = in.readParcelable(Itineraire.class.getClassLoader());
       
       if (imageUrls == null) {
          imageUrls = new ArrayList<String>();

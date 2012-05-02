@@ -8,8 +8,8 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import fr.colin.topoguide.model.Itineraire;
-import fr.colin.topoguide.model.Itineraire.Orientation;
-import fr.colin.topoguide.model.Itineraire.Type;
+import fr.colin.topoguide.model.Type;
+import fr.colin.topoguide.model.enums.Orientation;
 
 public class ItineraireTable extends Table<Itineraire> {
 
@@ -102,7 +102,6 @@ public class ItineraireTable extends Table<Itineraire> {
 
       int i = 0;
       itineraire.id = cursor.getLong(i++);
-      ;
       itineraire.voie = cursor.getString(i++);
       itineraire.orientation = Orientation.fromValue(cursor.getString(i++));
       itineraire.denivele = cursor.getInt(i++);

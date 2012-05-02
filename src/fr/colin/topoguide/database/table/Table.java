@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public abstract class Table<T> {
 
-   protected static String ID = "_id";
+   public static String ID = "_id";
    
    protected SQLiteDatabase database;
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.database.Cursor;
 import fr.colin.topoguide.database.DatabaseAdapter;
 import fr.colin.topoguide.database.table.DepartTable;
 import fr.colin.topoguide.database.table.ItineraireTable;
@@ -13,7 +14,7 @@ import fr.colin.topoguide.model.Depart;
 import fr.colin.topoguide.model.Itineraire;
 import fr.colin.topoguide.model.Sommet;
 import fr.colin.topoguide.model.TopoGuide;
-import fr.colin.topoguide.model.TopoMinimal;
+import fr.colin.topoguide.model.view.TopoListItem;
 
 public class LocalTopoGuideRepository extends DatabaseAdapter {
 
@@ -98,11 +99,6 @@ public class LocalTopoGuideRepository extends DatabaseAdapter {
    }
 
    /** */
-   public List<TopoMinimal> findAllMinimals() {
-      return null;
-   }
-
-   /** */
    public TopoGuide findTopoById(long id) {
       TopoGuide topo = topoGuideTable.get(id);
       if (!topo.isUnknown()) {
@@ -120,5 +116,36 @@ public class LocalTopoGuideRepository extends DatabaseAdapter {
       topoGuideTable.empty();
       sommetTable.empty();
       departTable.empty();
+   }
+
+   private static final String FETCH_ALL_TOPO_LIST_ITEMS_QUERY = 
+         "SELECT t." + TopoGuideTable.ID + ", t." + TopoGuideTable.NOM + ", s." + SommetTable.MASSIF + 
+         " FROM " + TopoGuideTable.TABLE_NAME + " t, " + SommetTable.TABLE_NAME + " s " +
+         "WHERE t." + TopoGuideTable.SOMMET + " = s." + SommetTable.ID;
+   
+   /** */
+   public List<TopoListItem> fetchAllTopoListItems() {
+      Cursor cursor = database.rawQuery(FETCH_ALL_TOPO_LIST_ITEMS_QUERY, null);
+      return cursorToTopoListItems(cursor);
+   }
+
+   private List<TopoListItem> cursorToTopoListItems(Cursor cursor) {
+      List<TopoListItem> items = new ArrayList<TopoListItem>();
+      if (cursor.moveToFirst()) {
+         do {
+            items.add(cursorRowToTopoListItem(cursor));
+         } while (cursor.moveToNext());
+      }
+      cursor.close();
+      return items;
+   }
+
+   private TopoListItem cursorRowToTopoListItem(Cursor cursor) {
+      int i = 0;
+      TopoListItem item = new TopoListItem();
+      item.id = cursor.getLong(i++);
+      item.nom = cursor.getString(i++);
+      item.massif = cursor.getString(i++);
+      return item;
    }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import fr.colin.topoguide.model.TopoGuide;
-import fr.colin.topoguide.model.TopoMinimal;
+import fr.colin.topoguide.model.view.TopoListItem;
 
 public class TopoGuideTable extends Table<TopoGuide> {
 
@@ -54,7 +54,7 @@ public class TopoGuideTable extends Table<TopoGuide> {
    /**
     * TODO TODO
     */
-   public List<TopoMinimal> findAllMinimals() {
+   public List<TopoListItem> findAllMinimals() {
       Cursor c = database.query(TABLE_NAME, new String[] { ID, NOM },
             null, null, null, null, null);
       return cursorToTopoMinimal(c);
@@ -70,12 +70,12 @@ public class TopoGuideTable extends Table<TopoGuide> {
    // *********************************************************************/
    // *********************************************************************/
 
-   private List<TopoMinimal> cursorToTopoMinimal(Cursor c) {
-      List<TopoMinimal> topos = new ArrayList<TopoMinimal>();
+   private List<TopoListItem> cursorToTopoMinimal(Cursor c) {
+      List<TopoListItem> topos = new ArrayList<TopoListItem>();
       if (c.getCount() > 0) {
          c.moveToFirst();
          do {
-            TopoMinimal topoMinimal = new TopoMinimal();
+            TopoListItem topoMinimal = new TopoListItem();
             topoMinimal.id = c.getLong(0);
             topoMinimal.nom = c.getString(1);
             topoMinimal.massif = "toto";
