@@ -4,11 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
-import fr.colin.topoguide.database.table.ItineraireTable;
 import fr.colin.topoguide.model.unknown.UnknownItineraire;
 
 public class Itineraire implements Parcelable {
@@ -17,11 +14,11 @@ public class Itineraire implements Parcelable {
    
    public long id;
    public String voie;
-   public String orientation;
+   public Orientation orientation;
    public int denivele;
    public String difficulteSki;
    public String description;
-   
+   public Type type;
    public String difficulteMontee;
    public String materiel;
    public int exposition;
@@ -50,6 +47,10 @@ public class Itineraire implements Parcelable {
    }
 
    
+   public boolean isUnknown() {
+      return false;
+   }
+
    @Override
    public boolean equals(final Object obj) {
       if (obj instanceof Itineraire) {
@@ -66,6 +67,7 @@ public class Itineraire implements Parcelable {
             .append(exposition, other.exposition)
             .append(pente, other.pente)
             .append(dureeJour, other.dureeJour)
+            .append(type, other.type)
             .append(topoId, other.topoId)
             .append(isVariante, other.isVariante)
             .isEquals();
@@ -88,6 +90,7 @@ public class Itineraire implements Parcelable {
          .append(exposition)
          .append(pente)
          .append(dureeJour)
+         .append(type)
          .append(topoId)
          .append(isVariante)
          .toHashCode();
@@ -98,7 +101,7 @@ public class Itineraire implements Parcelable {
       return new ToStringBuilder(this)
          .append("id", id)
          .append("voie", voie)
-         .append("orientation", orientation)
+         .append("orientation", orientation.value())
          .append("denivele", denivele)
          .append("difficulteSki", difficulteSki)
          .append("difficulteMontee", difficulteMontee)
@@ -107,32 +110,12 @@ public class Itineraire implements Parcelable {
          .append("exposition", exposition)
          .append("pente", pente)
          .append("dureeJour", dureeJour)
+         .append("type", type.value())
          .append("topoId", topoId)
          .append("variante", isVariante)
          .toString();
    }
    
-   /**
-    * DB
-    */
-   public Itineraire save(SQLiteDatabase db) {
-      ContentValues valeurs = new ContentValues();
-      valeurs.put(ItineraireTable.VOIE, this.voie);
-      valeurs.put(ItineraireTable.ORIENTATION, this.orientation);
-      valeurs.put(ItineraireTable.DENIVELE, this.denivele);
-      valeurs.put(ItineraireTable.DIFFICULTE_SKI, this.difficulteSki);
-      valeurs.put(ItineraireTable.DIFFICULTE_MONTEE, this.difficulteMontee);
-      valeurs.put(ItineraireTable.DESCRIPTION, this.description);
-      valeurs.put(ItineraireTable.MATERIEL, this.materiel);
-      valeurs.put(ItineraireTable.EXPOSITION, this.exposition);
-      valeurs.put(ItineraireTable.PENTE, this.pente);
-      valeurs.put(ItineraireTable.DUREE_JOUR, this.dureeJour);
-      valeurs.put(ItineraireTable.VARIANTE, this.isVariante());
-      valeurs.put(ItineraireTable.TOPO_ID, this.topoId);
-      this.id = db.insert(ItineraireTable.TABLE, null, valeurs);
-      return this;
-   }
-
    /**
     * Parcelable
     */
@@ -157,7 +140,7 @@ public class Itineraire implements Parcelable {
    public void writeToParcel(Parcel dest, int flags) {
       dest.writeLong(id);
       dest.writeString(voie);
-      dest.writeString(orientation);
+      dest.writeParcelable(orientation, flags);
       dest.writeInt(denivele);
       dest.writeString(difficulteSki);
       dest.writeString(difficulteMontee);
@@ -166,6 +149,7 @@ public class Itineraire implements Parcelable {
       dest.writeInt(exposition);
       dest.writeInt(pente);
       dest.writeInt(dureeJour);
+      dest.writeParcelable(type, flags);
       dest.writeLong(topoId);
       dest.writeByte((byte) (isVariante ? 1 : 0));
    }
@@ -173,7 +157,7 @@ public class Itineraire implements Parcelable {
    private void readFromParcel(Parcel in) {
       id = in.readLong();
       voie = in.readString();
-      orientation = in.readString();
+      orientation = in.readParcelable(Orientation.class.getClassLoader());
       denivele = in.readInt();
       difficulteSki = in.readString();
       difficulteMontee = in.readString();
@@ -182,11 +166,99 @@ public class Itineraire implements Parcelable {
       exposition = in.readInt();
       pente = in.readInt();
       dureeJour = in.readInt();
+      type = in.readParcelable(Type.class.getClassLoader());
       topoId = in.readInt();
       isVariante = in.readByte() == 1;
    }
+   
+   public enum Type implements Parcelable {
+      ALLER_RETOUR("Aller/Retour"), BOUCLE("Boucle"), TRAVERSEE("Traversée"), INCONNU("Non renseigné");
+      
+      private final String value;
 
-   public boolean isUnknown() {
-      return false;
+      private Type(String value) {
+         this.value = value;
+      }
+      
+      public String value() {
+         return value;
+      }
+      
+      public static Type fromValue(String value) {
+         for (Type type : Type.values()) {
+            if (type.value().equalsIgnoreCase(value)) {
+               return type;
+            }
+         }
+         return INCONNU;
+      }
+      
+      @Override
+      public int describeContents() {
+          return 0;
+      }
+
+      @Override
+      public void writeToParcel(final Parcel dest, final int flags) {
+          dest.writeInt(ordinal());
+      }
+
+      public static final Creator<Type> CREATOR = new Creator<Type>() {
+          @Override
+          public Type createFromParcel(final Parcel source) {
+              return Type.values()[source.readInt()];
+          }
+
+          @Override
+          public Type[] newArray(final int size) {
+              return new Type[size];
+          }
+      };
+   }
+   
+   public enum Orientation implements Parcelable {
+      N("Nord"), NE("Nord-Est"), E("Est"), SE("Sud-Est"), S("Sud"), SW("Sud-Ouest"), W("Ouest"), 
+      NW("Nord-Ouest"), T("Toutes"), INCONNUE("Non renseignée");
+      
+      private final String value;
+
+      private Orientation(String value) {
+         this.value = value;
+      }
+      
+      public String value() {
+         return value;
+      }
+      
+      public static Orientation fromValue(String value) {
+         for (Orientation orientation : Orientation.values()) {
+            if (orientation.value().equalsIgnoreCase(value)) {
+               return orientation;
+            }
+         }
+         return INCONNUE;
+      }
+      
+      @Override
+      public int describeContents() {
+          return 0;
+      }
+
+      @Override
+      public void writeToParcel(final Parcel dest, final int flags) {
+          dest.writeInt(ordinal());
+      }
+
+      public static final Creator<Orientation> CREATOR = new Creator<Orientation>() {
+          @Override
+          public Orientation createFromParcel(final Parcel source) {
+              return Orientation.values()[source.readInt()];
+          }
+
+          @Override
+          public Orientation[] newArray(final int size) {
+              return new Orientation[size];
+          }
+      };
    }
 }

@@ -16,7 +16,7 @@ import fr.colin.topoguide.views.R;
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
    private static final String BASE_NAME = "topoguide.db";
-   private static final int CURRENT_BASE_VERSION = 1;
+   private static final int CURRENT_BASE_VERSION = 2;
    
    private final Context context;
 

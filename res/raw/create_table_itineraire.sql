@@ -10,6 +10,7 @@ CREATE TABLE itineraire (
   exposition INT,
   pente INT,
   duree_jour INTEGER,
+  type TEXT,
   variante INT DEFAULT 0,
   topoguide INT
 );

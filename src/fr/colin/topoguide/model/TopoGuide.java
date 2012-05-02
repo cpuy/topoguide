@@ -20,9 +20,6 @@ public class TopoGuide implements Parcelable {
    
    public static final TopoGuide UNKNOWN_TOPOGUIDE = new UnknownTopoGuide();
    
-   /**
-    * TODO clean tous ces champs nons utilisés
-    */
    public long id;
    public String nom;
    public long numero;
@@ -33,17 +30,8 @@ public class TopoGuide implements Parcelable {
    public Itineraire itineraire = UNKNOWN_ITINERAIRE;
    public List<Itineraire> variantes = new ArrayList<Itineraire>();
    
-   // TODO
-   public String type;
-
    public List<String> imageUrls;
 
-   
-   
-   
-   // public String cartes; TODO
-
-   // TODO constructeur avec Fields
    public TopoGuide() {
 
    }
@@ -116,7 +104,6 @@ public class TopoGuide implements Parcelable {
             .append(depart, other.depart)
             .append(itineraire, other.itineraire)
             .append(variantes, other.variantes)
-            .append(type, other.type)
             .isEquals();
       } else {
          return false;
@@ -134,7 +121,6 @@ public class TopoGuide implements Parcelable {
          .append(depart)
          .append(itineraire)
          .append(variantes)
-         .append(type)
          .toHashCode();
    }
 
@@ -149,7 +135,6 @@ public class TopoGuide implements Parcelable {
          .append("depart", depart)
          .append("itineraire", itineraire)
          .append("variantes", variantes)
-         .append("type", type)
          .toString();
    }
 }

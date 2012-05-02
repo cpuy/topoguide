@@ -15,6 +15,8 @@ import org.jsoup.select.Elements;
 
 import fr.colin.topoguide.model.Depart;
 import fr.colin.topoguide.model.Itineraire;
+import fr.colin.topoguide.model.Itineraire.Orientation;
+import fr.colin.topoguide.model.Itineraire.Type;
 import fr.colin.topoguide.model.Sommet;
 import fr.colin.topoguide.model.TopoGuide;
 
@@ -31,6 +33,7 @@ public class SkitourPageParser {
    private static final int ITEMS_TOPO1_DIFFICULTE_MONTEE = 4;
    private static final int ITEMS_TOPO1_DIFFICULTE_SKI = 5;
    private static final int ITEMS_TOPO1_DUREE_JOUR = 7;
+   private static final int ITEMS_TOPO1_TYPE = 8;
 
    private ArrayList<String> div_items_topo_1_lines;
    private ArrayList<String> div_items_topo_2_lines;
@@ -89,7 +92,7 @@ public class SkitourPageParser {
    protected Itineraire parseItineraire() {
       Itineraire itineraire = Itineraire.principal();
       itineraire.voie = substringAfter(title.ownText(), ",").trim();
-      itineraire.orientation = div_items_topo_1_lines.get(ITEMS_TOPO1_ORIENTATION);
+      itineraire.orientation = Orientation.valueOf(div_items_topo_1_lines.get(ITEMS_TOPO1_ORIENTATION));
       itineraire.denivele = getOnlyNumbers(div_items_topo_1_lines.get(ITEMS_TOPO1_DENIVELE));
       itineraire.difficulteSki = div_items_topo_1_lines.get(ITEMS_TOPO1_DIFFICULTE_SKI);
       itineraire.description = div_itineraire.ownText();
@@ -98,6 +101,7 @@ public class SkitourPageParser {
       itineraire.exposition = getOnlyNumbers(div_items_topo_2_lines.get(ITEMS_TOPO2_EXPOSITION));
       itineraire.pente = getOnlyNumbers(div_items_topo_2_lines.get(ITEMS_TOPO2_PENTE));
       itineraire.dureeJour = Integer.valueOf(div_items_topo_1_lines.get(ITEMS_TOPO1_DUREE_JOUR));
+      itineraire.type = Type.fromValue(div_items_topo_1_lines.get(ITEMS_TOPO1_TYPE));
       return itineraire;
    }
 
@@ -135,7 +139,7 @@ public class SkitourPageParser {
       String[] split = em.ownText().split(" ; ");
       variante.denivele = Integer.valueOf(split[0].replace("(D+ ", "").replace("m", ""));
       variante.difficulteSki = split[1].replaceFirst("Ski ", "");
-      variante.orientation = split[2].replaceFirst("Orientation ", "").replace(")", "");
+      variante.orientation = Orientation.valueOf(split[2].replaceFirst("Orientation ", "").replace(")", ""));
       variante.description = p.ownText().replace("\"", "").trim();
       return variante;
    }

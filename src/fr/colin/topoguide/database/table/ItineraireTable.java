@@ -8,6 +8,8 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import fr.colin.topoguide.model.Itineraire;
+import fr.colin.topoguide.model.Itineraire.Orientation;
+import fr.colin.topoguide.model.Itineraire.Type;
 
 public class ItineraireTable extends Table<Itineraire> {
 
@@ -23,11 +25,12 @@ public class ItineraireTable extends Table<Itineraire> {
    public static final String EXPOSITION = "exposition";
    public static final String PENTE = "pente";
    public static final String DUREE_JOUR = "duree_jour";
+   public static final String TYPE = "type";
    public static final String VARIANTE = "variante";
    public static final String TOPO_ID = "topoguide";
 
    private static String[] ALL_COLUMNS = new String[] { ID, VOIE, ORIENTATION, DENIVELE, DIFFICULTE_SKI,
-         DIFFICULTE_MONTEE, DESCRIPTION, MATERIEL, EXPOSITION, PENTE, DUREE_JOUR, TOPO_ID, VARIANTE };
+         DIFFICULTE_MONTEE, DESCRIPTION, MATERIEL, EXPOSITION, PENTE, DUREE_JOUR, TYPE, TOPO_ID, VARIANTE };
 
    private static final int VARIANTE_COLUMN_ID = ALL_COLUMNS.length - 1;
 
@@ -40,7 +43,7 @@ public class ItineraireTable extends Table<Itineraire> {
    protected ContentValues getInsertValues(Itineraire itineraire) {
       ContentValues insertValues = new ContentValues();
       insertValues.put(VOIE, itineraire.voie);
-      insertValues.put(ORIENTATION, itineraire.orientation);
+      insertValues.put(ORIENTATION, itineraire.orientation.value());
       insertValues.put(DENIVELE, itineraire.denivele);
       insertValues.put(DIFFICULTE_SKI, itineraire.difficulteSki);
       insertValues.put(DIFFICULTE_MONTEE, itineraire.difficulteMontee);
@@ -49,6 +52,7 @@ public class ItineraireTable extends Table<Itineraire> {
       insertValues.put(EXPOSITION, itineraire.exposition);
       insertValues.put(PENTE, itineraire.pente);
       insertValues.put(DUREE_JOUR, itineraire.dureeJour);
+      insertValues.put(TYPE, itineraire.type.value());
       insertValues.put(VARIANTE, itineraire.isVariante());
       insertValues.put(TOPO_ID, itineraire.topoId);
       return insertValues;
@@ -100,7 +104,7 @@ public class ItineraireTable extends Table<Itineraire> {
       itineraire.id = cursor.getLong(i++);
       ;
       itineraire.voie = cursor.getString(i++);
-      itineraire.orientation = cursor.getString(i++);
+      itineraire.orientation = Orientation.fromValue(cursor.getString(i++));
       itineraire.denivele = cursor.getInt(i++);
       itineraire.difficulteSki = cursor.getString(i++);
       itineraire.difficulteMontee = cursor.getString(i++);
@@ -109,6 +113,7 @@ public class ItineraireTable extends Table<Itineraire> {
       itineraire.exposition = cursor.getInt(i++);
       itineraire.pente = cursor.getInt(i++);
       itineraire.dureeJour = cursor.getInt(i++);
+      itineraire.type = Type.fromValue(cursor.getString(i++));
       itineraire.topoId = cursor.getLong(i++);
       return itineraire;
    }
