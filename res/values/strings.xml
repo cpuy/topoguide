@@ -9,7 +9,8 @@
 	<string name="menu_download">Download new topo</string>
 	<string name="menu_delete">Supprimer</string>
     
-	<string name="download">Download</string>
+	<string name="download">Télécharger</string>
+	<string name="cancel">Annuler</string>
 	
 	<string name="tab_info">Infos</string>
 	<string name="tab_acces">Acces</string>
@@ -23,4 +24,8 @@
 	<string name="topo_itineraire_orientation">Orientation :</string>
 	<string name="topo_itineraire_difficulte_ski">Ski :</string>
 	<string name="topo_itineraire_denivele">Denivele :</string>
+	
+	<string name="view_download_title">Télécharger un topoguide Skitour</string>
+	<string name="id_topo">Id :</string>
+	<string name="download_topoId_hint">Identifiant topoguide</string>
 </resources>

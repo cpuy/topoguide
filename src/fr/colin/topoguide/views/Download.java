@@ -5,52 +5,39 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.repository.RepositoryException;
 
-/**
- * TODO
- *    - Input text -> input numero
- *    
- * @author colin
- *
- */
-public class Download extends Activity {
 
+public class Download extends Activity {
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.download);
-      
-      
-      Button confirmButton = (Button) findViewById(R.id.download);
-      confirmButton.setOnClickListener(downloadButtonClickListener());
+//      setTitle(R.string.view_download_title);
    }
 
-   private OnClickListener downloadButtonClickListener() {
-      return new View.OnClickListener() {
-         public void onClick(View view) {
-             onClickButtonDownload();
-         }
-     };
+   public void onCancel(View view) {
+      setResult(RESULT_CANCELED);
+      finish();
    }
-   
-   private void onClickButtonDownload() {
+
+   public void onDownload(View view) {
       EditText findViewById = (EditText) findViewById(R.id.topoId);
-       try {
+      try {
          TopoGuide topo = skitour().fetchTopoById(Long.parseLong(findViewById.getText().toString()));
          setResult(RESULT_OK, new Intent().putExtra("downloaded_topo", topo));
-      } catch (NumberFormatException e) {
-         setResult(RESULT_CANCELED);
-         e.printStackTrace();
       } catch (RepositoryException e) {
          setResult(RESULT_CANCELED);
          e.printStackTrace();
       }
-       finish();
+      finish();
+   }
+   
+   public void showHelp(View view) {
+      Toast.makeText(this, "Coucou c'est de l'aide", Toast.LENGTH_SHORT).show();
    }
 }
