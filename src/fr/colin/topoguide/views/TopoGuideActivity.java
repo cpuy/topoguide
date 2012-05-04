@@ -1,9 +1,13 @@
 package fr.colin.topoguide.views;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -12,10 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
+import android.widget.Toast;
 import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.repository.ImageRepository;
 import fr.colin.topoguide.repository.LocalTopoGuideRepository;
 import fr.colin.topoguide.views.adapter.TopoGuideListAdapter;
+import fr.colin.topoguide.views.task.DownloadTopoGuideTask;
 
 /**
  * TODO : - mise en cache de la liste des topos - clean code
@@ -71,6 +77,7 @@ public class TopoGuideActivity extends ListActivity {
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
       case INSERT_ID:
+//         ProgressDialog dialog = ProgressDialog.show(this, "", "Loading. Please wait...", true);
          downloadTopo();
          return true;
       }
@@ -86,13 +93,18 @@ public class TopoGuideActivity extends ListActivity {
       super.onActivityResult(requestCode, resultCode, intent);
 
       if (resultCode == RESULT_OK) {
-         TopoGuide topo = (TopoGuide) intent.getExtras().getParcelable("downloaded_topo");
-         topoguideRepository.open();
-         topo = topoguideRepository.create(topo);
+         Long topoId = intent.getExtras().getLong("downloaded_topo");
+         
+         AsyncTask<Long, ProgressDialog, TopoGuide> execute = new DownloadTopoGuideTask(this).execute(topoId);
          try {
-            imageRepository.addImagesForTopo(topo);
-         } catch (IOException e) {
-            // TODO
+            TopoGuide topo = execute.get();
+            topoguideRepository.open();
+            topo = topoguideRepository.create(topo);
+         } catch (InterruptedException e) {
+            // TODO Auto-generated catch block by colin
+            e.printStackTrace();
+         } catch (ExecutionException e) {
+            // TODO Auto-generated catch block by colin
             e.printStackTrace();
          }
          fillData();
@@ -113,6 +125,7 @@ public class TopoGuideActivity extends ListActivity {
          // topoguideRepository.delete(info.id);
          fillData();
          return true;
+         
       }
       return super.onContextItemSelected(item);
    }
@@ -124,4 +137,10 @@ public class TopoGuideActivity extends ListActivity {
       i.putExtra("current_topo", topoguideRepository.findTopoById(id));
       startActivity(i);
    }
+   
+   
+   
+   
+   
+   
 }
