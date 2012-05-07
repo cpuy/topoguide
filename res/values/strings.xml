@@ -29,5 +29,7 @@
 	<string name="id_topo">Id :</string>
 	<string name="download_topoId_hint">Identifiant topoguide</string>
 	<string name="download_in_progress">Téléchargement en cours ...</string>
+	<string name="topo_id">topo_id</string>
+	<string name="img_id">img_id</string>
 	
 </resources>

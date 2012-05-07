@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import fr.colin.topoguide.views.task.DownloadTopoGuideTask;
 
-public class Download extends Activity {
+public class DownloadActivity extends Activity {
 
    public static int RESULT_KO = RESULT_FIRST_USER;
    

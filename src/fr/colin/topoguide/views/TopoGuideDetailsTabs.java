@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.TabHost;
 import fr.colin.topoguide.model.TopoGuide;
 
-public class TopoGuideDetailsTab extends TabActivity {
+public class TopoGuideDetailsTabs extends TabActivity {
 
 
    @Override
@@ -25,6 +25,6 @@ public class TopoGuideDetailsTab extends TabActivity {
       Resources res = getResources();
       tabHost.addTab(tabHost.newTabSpec("infos").setIndicator(res.getString(R.string.tab_info)).setContent(new Intent(this, Infos.class).putExtra("current_topo", topo)));
       tabHost.addTab(tabHost.newTabSpec("acces").setIndicator(res.getString(R.string.tab_acces)).setContent(intent));
-      tabHost.addTab(tabHost.newTabSpec("itinerary").setIndicator(res.getString(R.string.tab_itinerary)).setContent(new Intent(this, Itineraire.class).putExtra("current_topo", topo)));
+      tabHost.addTab(tabHost.newTabSpec("itinerary").setIndicator(res.getString(R.string.tab_itinerary)).setContent(new Intent(this, ItineraireTab.class).putExtra("current_topo", topo)));
    }
 }

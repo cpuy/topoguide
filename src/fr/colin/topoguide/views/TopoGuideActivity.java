@@ -1,7 +1,5 @@
 package fr.colin.topoguide.views;
 
-import static android.widget.Toast.LENGTH_LONG;
-import static fr.colin.topoguide.views.Download.RESULT_KO;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
-import android.widget.Toast;
-import fr.colin.topoguide.repository.ImageRepository;
 import fr.colin.topoguide.repository.LocalTopoGuideRepository;
 import fr.colin.topoguide.views.adapter.TopoGuideListAdapter;
 
@@ -31,7 +27,6 @@ public class TopoGuideActivity extends ListActivity {
 
    private LocalTopoGuideRepository topoguideRepository;
 
-   private ImageRepository imageRepository;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +34,6 @@ public class TopoGuideActivity extends ListActivity {
       setContentView(R.layout.topo_list);
       topoguideRepository = LocalTopoGuideRepository.fromContext(this);
       topoguideRepository.open();
-      imageRepository = new ImageRepository(this);
       fillData();
       registerForContextMenu(getListView());
    }
@@ -71,7 +65,6 @@ public class TopoGuideActivity extends ListActivity {
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
       case INSERT_ID:
-//         ProgressDialog dialog = ProgressDialog.show(this, "", "Loading. Please wait...", true);
          downloadTopo();
          return true;
       }
@@ -79,7 +72,7 @@ public class TopoGuideActivity extends ListActivity {
    }
 
    private void downloadTopo() {
-      startActivityForResult(new Intent(this, Download.class), ACTIVITY_EDIT);
+      startActivityForResult(new Intent(this, DownloadActivity.class), ACTIVITY_EDIT);
    }
 
    @Override
@@ -113,7 +106,7 @@ public class TopoGuideActivity extends ListActivity {
    @Override
    protected void onListItemClick(ListView l, View v, int position, long id) {
       super.onListItemClick(l, v, position, id);
-      Intent i = new Intent(this, TopoGuideDetailsTab.class);
+      Intent i = new Intent(this, TopoGuideDetailsTabs.class);
       i.putExtra("current_topo", topoguideRepository.findTopoById(id));
       startActivity(i);
    }

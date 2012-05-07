@@ -15,10 +15,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".TopoGuideDetails" />
-        <activity android:name=".Download" android:theme="@android:style/Theme.Dialog" android:label="@string/view_download_title"/>
-        <activity android:name=".TopoGuideDetailsTab" />
+        <activity android:name=".DownloadActivity" android:theme="@android:style/Theme.Dialog" android:label="@string/view_download_title"/>
+        <activity android:name=".TopoGuideDetailsTabs" />
         <activity android:name=".Infos" />
-        <activity android:name=".Itineraire" />
+        <activity android:name=".ItineraireTab" />
+        <activity android:name=".ImageFullScreenActivity" />
+        
     </application>
 
 </manifest>

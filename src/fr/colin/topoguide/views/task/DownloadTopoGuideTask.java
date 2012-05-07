@@ -5,7 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.widget.Toast.LENGTH_LONG;
 import static fr.colin.topoguide.model.TopoGuide.UNKNOWN_TOPOGUIDE;
 import static fr.colin.topoguide.repository.RemoteTopoGuideRepository.skitour;
-import static fr.colin.topoguide.views.Download.RESULT_KO;
+import static fr.colin.topoguide.views.DownloadActivity.RESULT_KO;
 
 import java.io.IOException;
 import java.util.ArrayList;
