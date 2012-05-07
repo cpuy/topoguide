@@ -1,13 +1,9 @@
 package fr.colin.topoguide.views;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
-import android.app.Dialog;
+import static android.widget.Toast.LENGTH_LONG;
+import static fr.colin.topoguide.views.Download.RESULT_KO;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -17,13 +13,9 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
-import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.repository.ImageRepository;
 import fr.colin.topoguide.repository.LocalTopoGuideRepository;
-import fr.colin.topoguide.repository.RepositoryException;
-import fr.colin.topoguide.utils.Downloader;
 import fr.colin.topoguide.views.adapter.TopoGuideListAdapter;
-import fr.colin.topoguide.views.task.DownloadTopoGuideTask;
 
 /**
  * TODO : - mise en cache de la liste des topos - clean code
@@ -52,7 +44,7 @@ public class TopoGuideActivity extends ListActivity {
       registerForContextMenu(getListView());
    }
 
-   private void fillData() {
+   public void fillData() {
       setListAdapter(new TopoGuideListAdapter(this, topoguideRepository.fetchAllTopoListItems()));
    }
 
@@ -93,41 +85,8 @@ public class TopoGuideActivity extends ListActivity {
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
       super.onActivityResult(requestCode, resultCode, intent);
-
       if (resultCode == RESULT_OK) {
-         Long topoId = intent.getExtras().getLong("downloaded_topo");
-         
-         AsyncTask<Long, ProgressDialog, TopoGuide> execute = new DownloadTopoGuideTask(this).execute(topoId);
-         try {
-            TopoGuide topo = execute.get();
-            topoguideRepository.open();
-            topo = topoguideRepository.create(topo);
-            
-            try {
-               for (int i = 0; i < topo.imageUrls.size(); i++) {
-                  byte[] datas = Downloader.DownloadFile(topo.imageUrls.get(i));
-                  imageRepository.create(topo.id, i, datas);
-               }
-            } catch (IOException e) {
-               // TODO Auto-generated catch block by colin
-               e.printStackTrace();
-            } catch (RepositoryException e) {
-               // TODO Auto-generated catch block by colin
-               e.printStackTrace();
-            }
-            
-            
-         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block by colin
-            e.printStackTrace();
-         } catch (ExecutionException e) {
-            // TODO Auto-generated catch block by colin
-            e.printStackTrace();
-         }
-         
-         
-         
-         
+         topoguideRepository.open();
          fillData();
       }
    }
@@ -158,10 +117,4 @@ public class TopoGuideActivity extends ListActivity {
       i.putExtra("current_topo", topoguideRepository.findTopoById(id));
       startActivity(i);
    }
-   
-   
-   
-   
-   
-   
 }

@@ -28,7 +28,7 @@ public class Itineraire implements Parcelable {
    public int pente;
    public int dureeJour;
    public long topoId;
-   private Boolean isVariante;
+   private boolean isVariante;
 
    protected Itineraire() {
    }
