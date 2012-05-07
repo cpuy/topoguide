@@ -1,5 +1,7 @@
 package fr.colin.topoguide.repository;
 
+import static fr.colin.topoguide.utils.IOUtils.writeInFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,9 +10,6 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-import fr.colin.topoguide.model.TopoGuide;
-import fr.colin.topoguide.utils.Downloader;
 
 public class ImageRepository {
 
@@ -20,39 +19,41 @@ public class ImageRepository {
       applicationBaseFolder = context.getExternalFilesDir(null);
    }
    
-   public void addImagesForTopo(TopoGuide topo) throws IOException {
-      createTopoImagesFolderIfNotExists(topo.numero);
-      int compteur = 1;
-      for (String url : topo.imageUrls) {
-         Log.d("FILE", url);
-         Log.d("FOLDER", new File(getTopoImageFolder(topo.numero), "img_" + compteur++).getAbsolutePath());
-         Downloader.DownloadFile(url, new File(getTopoImageFolder(topo.numero), "img_" + compteur++));
+   public File create(long topoId, long imageId, byte[] data) throws RepositoryException {
+      File folderTopo = createTopoImageFolderIfNotExists(topoId);
+      File file = new File(folderTopo, "img_" + imageId);
+      try {
+         writeInFile(data, file);
+      } catch (IOException e) {
+         throw new RepositoryException("Unable to create image " + imageId + " for topo " + topoId , e);
       }
+      return file;
    }
-   
-   public void createTopoImagesFolderIfNotExists(long numeroTopo) {
-      File folder = getTopoImageFolder(numeroTopo);
-      if (!folder.exists()) {
-         folder.mkdirs();
+
+   private File createTopoImageFolderIfNotExists(long topoId) {
+      File folderTopo = getTopoImageFolder(topoId);
+      if (!folderTopo.exists()) {
+         folderTopo.mkdirs();
       }
+      return folderTopo;
    }
-   
-   public List<Bitmap> findImagesForTopo(TopoGuide topo) {
+
+   public List<Bitmap> findByTopoId(long topoId) {
       ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
-      File topoImageDireectory = getTopoImageFolder(topo.numero);
+      File topoImageDireectory = getTopoImageFolder(topoId);
       if (topoImageDireectory.exists()) {
-      for (File image : topoImageDireectory.listFiles()) {
-         bitmaps.add(BitmapFactory.decodeFile(image.getAbsolutePath()));
-      }
-      }
-      else
-      {
-         Log.d("REPO", topoImageDireectory.getAbsolutePath() + " existe pas");
+         for (File image : topoImageDireectory.listFiles()) {
+            bitmaps.add(BitmapFactory.decodeFile(image.getAbsolutePath()));
+         }
       }
       return bitmaps;
    }
-   
-   private File getTopoImageFolder(long numeroTopo) {
-      return new File(applicationBaseFolder, "skitour_" + numeroTopo);
+
+   private File getTopoImageFolder(long topoId) {
+      return new File(getBaseFolder(), String.valueOf(topoId));
+   }
+
+   protected File getBaseFolder() {
+      return new File(applicationBaseFolder, "images");
    }
 }

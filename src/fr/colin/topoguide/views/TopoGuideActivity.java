@@ -20,6 +20,8 @@ import android.widget.Toast;
 import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.repository.ImageRepository;
 import fr.colin.topoguide.repository.LocalTopoGuideRepository;
+import fr.colin.topoguide.repository.RepositoryException;
+import fr.colin.topoguide.utils.Downloader;
 import fr.colin.topoguide.views.adapter.TopoGuideListAdapter;
 import fr.colin.topoguide.views.task.DownloadTopoGuideTask;
 
@@ -100,6 +102,21 @@ public class TopoGuideActivity extends ListActivity {
             TopoGuide topo = execute.get();
             topoguideRepository.open();
             topo = topoguideRepository.create(topo);
+            
+            try {
+               for (int i = 0; i < topo.imageUrls.size(); i++) {
+                  byte[] datas = Downloader.DownloadFile(topo.imageUrls.get(i));
+                  imageRepository.create(topo.id, i, datas);
+               }
+            } catch (IOException e) {
+               // TODO Auto-generated catch block by colin
+               e.printStackTrace();
+            } catch (RepositoryException e) {
+               // TODO Auto-generated catch block by colin
+               e.printStackTrace();
+            }
+            
+            
          } catch (InterruptedException e) {
             // TODO Auto-generated catch block by colin
             e.printStackTrace();
@@ -107,6 +124,10 @@ public class TopoGuideActivity extends ListActivity {
             // TODO Auto-generated catch block by colin
             e.printStackTrace();
          }
+         
+         
+         
+         
          fillData();
       }
    }

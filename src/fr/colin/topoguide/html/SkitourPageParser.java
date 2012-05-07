@@ -79,6 +79,7 @@ public class SkitourPageParser {
       topoguide.depart = parseDepart();
       topoguide.variantes = parseVariantes();
       topoguide.itineraire = parseItineraire();
+      topoguide.imageUrls = parseImagesUrls();
       return topoguide;
    }
 

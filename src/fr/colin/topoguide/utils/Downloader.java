@@ -1,6 +1,7 @@
 package fr.colin.topoguide.utils;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,6 +25,21 @@ public class Downloader {
       return Jsoup.connect(url).userAgent(USER_AGENT).get();
    }
 
+   public static byte[] DownloadFile(String fileUrl) throws IOException {
+      URL url = new URL(fileUrl);
+      URLConnection connection = url.openConnection();
+      InputStream is = connection.getInputStream();
+      ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+      int nRead;
+      byte[] data = new byte[16384];
+      while ((nRead = is.read(data, 0, data.length)) != -1) {
+        buffer.write(data, 0, nRead);
+      }
+      buffer.flush();
+      is.close();
+      return buffer.toByteArray();
+   }
+   
    /**
     * TODO Fermer la connection et inpustream
     */
