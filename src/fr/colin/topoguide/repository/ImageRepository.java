@@ -1,10 +1,10 @@
 package fr.colin.topoguide.repository;
 
 import static fr.colin.topoguide.utils.IOUtils.writeInFile;
+import static java.lang.String.format;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,17 +32,21 @@ public class ImageRepository {
    /** */
    public void create(long topoId, long imageId, byte[] data) throws RepositoryException {
       createTopoImageFolderIfNotExists(topoId);
-      try {
-         writeInFile(data, image(topoId, imageId));
-      } catch (IOException e) {
-         throw new RepositoryException("Unable to create image " + imageId + " for topo " + topoId, e);
-      }
+      createImage(topoId, imageId, data);
    }
 
    private void createTopoImageFolderIfNotExists(long topoId) {
       File folderTopo = getTopoImageFolder(topoId);
       if (!folderTopo.exists()) {
          folderTopo.mkdirs();
+      }
+   }
+
+   private void createImage(long topoId, long imageId, byte[] data) throws RepositoryException {
+      try {
+         writeInFile(data, image(topoId, imageId));
+      } catch (IOException e) {
+         throw new RepositoryException(format("Unable to create image %d  for topo %d ", imageId, topoId), e);
       }
    }
 
