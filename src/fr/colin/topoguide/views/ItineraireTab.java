@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.TextView;
+import fr.colin.topoguide.model.Itineraire;
 import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.repository.ImageRepository;
 import fr.colin.topoguide.repository.RepositoryException;
@@ -24,7 +26,7 @@ public class ItineraireTab extends Activity {
 
       TopoGuide topoGuide = (TopoGuide) getIntent().getExtras().getParcelable("current_topo");
       fillImagesGridView(topoGuide);
-      fillItineraireInformations(topoGuide);
+      fillItineraireInformations(topoGuide.itineraire);
    }
 
    private void fillImagesGridView(final TopoGuide topoGuide) {
@@ -50,18 +52,8 @@ public class ItineraireTab extends Activity {
    }
 
    // TODO
-   private void fillItineraireInformations(TopoGuide topoGuide) {
-      if (!topoGuide.variantes.isEmpty()) {
-         // ((TextView)
-         // findViewById(R.id.topo_itineraire_denivele)).setText(topoGuide.variantes.get(0).denivele);
-         // ((TextView)
-         // findViewById(R.id.topo_itineraire_description)).setText(topoGuide.variantes.get(0).description);
-         // ((TextView)
-         // findViewById(R.id.topo_itineraire_difficulte_ski)).setText(topoGuide.variantes.get(0).difficulteSki);
-         // ((TextView)
-         // findViewById(R.id.topo_itineraire_orientation)).setText(topoGuide.variantes.get(0).orientation);
-         // ((TextView)
-         // findViewById(R.id.topo_itineraire_voie)).setText(topoGuide.variantes.get(0).voie);
-      }
+   private void fillItineraireInformations(Itineraire itineraire) {
+      TextView description = (TextView) findViewById(R.id.itineraire_description);
+      description.setText(itineraire.description);
    }
 }
