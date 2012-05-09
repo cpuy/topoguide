@@ -12,6 +12,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 
 public class ImageRepository {
 
@@ -25,12 +26,14 @@ public class ImageRepository {
    }
 
    /** */
-   public Bitmap get(long topoId, long imageId) {
+   public Bitmap get(long topoId, long imageId) throws RepositoryException {
+      checkMediaReadable();
       return BitmapFactory.decodeFile(image(topoId, imageId).getAbsolutePath());
    }
 
    /** */
    public void create(long topoId, long imageId, byte[] data) throws RepositoryException {
+      checkMediaWritable();
       createTopoImageFolderIfNotExists(topoId);
       createImage(topoId, imageId, data);
    }
@@ -51,7 +54,8 @@ public class ImageRepository {
    }
 
    /** */
-   public List<Bitmap> findByTopoId(long topoId) {
+   public List<Bitmap> findByTopoId(long topoId) throws RepositoryException {
+      checkMediaReadable();
       ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
       for (File image : listImagesOrderedByImageId(topoId)) {
          bitmaps.add(BitmapFactory.decodeFile(image.getAbsolutePath()));
@@ -83,5 +87,19 @@ public class ImageRepository {
 
    protected File image(long topoId, long imageId) {
       return new File(getTopoImageFolder(topoId), IMG_PREFIX + imageId);
+   }
+
+   private void checkMediaReadable() throws RepositoryException {
+      String state = Environment.getExternalStorageState();
+      if (!Environment.MEDIA_MOUNTED.equals(state) && !Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+         throw new RepositoryException("Media not readable");
+      }
+   }
+
+   private void checkMediaWritable() throws RepositoryException {
+      String state = Environment.getExternalStorageState();
+      if (!Environment.MEDIA_MOUNTED.equals(state)) {
+         throw new RepositoryException("Media not mounted");
+      }
    }
 }
