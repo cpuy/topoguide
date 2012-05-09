@@ -10,8 +10,8 @@ public class ImageFullScreenActivity extends Activity {
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       
-      long topoId = (Long) getIntent().getExtras().get(getString(R.string.topo_id));
-      int img_id = (Integer) getIntent().getExtras().get(getString(R.string.img_id));
+      long topoId = (Long) getIntent().getExtras().get(getString(R.string.extra_topo_id));
+      int img_id = (Integer) getIntent().getExtras().get(getString(R.string.extra_img_id));
       
       Toast.makeText(this, "topo " + topoId + " img " + img_id, Toast.LENGTH_SHORT).show();
       

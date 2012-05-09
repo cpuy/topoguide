@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="extra_topo_id">topo_id</string>
+	<string name="extra_img_id">img_id</string>
+	
+	
+	
     <string name="hello">Hello World, TopoguideActivity!</string>
     <string name="app_name">Topoguide-android</string>
     
@@ -29,7 +34,6 @@
 	<string name="id_topo">Id :</string>
 	<string name="download_topoId_hint">Identifiant topoguide</string>
 	<string name="download_in_progress">Téléchargement en cours ...</string>
-	<string name="topo_id">topo_id</string>
-	<string name="img_id">img_id</string>
+
 	
 </resources>
