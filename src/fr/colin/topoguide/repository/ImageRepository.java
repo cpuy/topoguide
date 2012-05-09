@@ -4,7 +4,9 @@ import static fr.colin.topoguide.utils.IOUtils.writeInFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
@@ -13,40 +15,58 @@ import android.graphics.BitmapFactory;
 
 public class ImageRepository {
 
+   private final static String IMAGES_BASE_FOLDER = "images";
+   private static final String IMG_PREFIX = "img_";
+
    private File applicationBaseFolder;
 
    public ImageRepository(Context context) {
       applicationBaseFolder = context.getExternalFilesDir(null);
    }
-   
-   public File create(long topoId, long imageId, byte[] data) throws RepositoryException {
-      File folderTopo = createTopoImageFolderIfNotExists(topoId);
-      File file = new File(folderTopo, "img_" + imageId);
-      try {
-         writeInFile(data, file);
-      } catch (IOException e) {
-         throw new RepositoryException("Unable to create image " + imageId + " for topo " + topoId , e);
-      }
-      return file;
+
+   /** */
+   public Bitmap get(long topoId, long imageId) {
+      return BitmapFactory.decodeFile(image(topoId, imageId).getAbsolutePath());
    }
 
-   private File createTopoImageFolderIfNotExists(long topoId) {
+   /** */
+   public void create(long topoId, long imageId, byte[] data) throws RepositoryException {
+      createTopoImageFolderIfNotExists(topoId);
+      try {
+         writeInFile(data, image(topoId, imageId));
+      } catch (IOException e) {
+         throw new RepositoryException("Unable to create image " + imageId + " for topo " + topoId, e);
+      }
+   }
+
+   private void createTopoImageFolderIfNotExists(long topoId) {
       File folderTopo = getTopoImageFolder(topoId);
       if (!folderTopo.exists()) {
          folderTopo.mkdirs();
       }
-      return folderTopo;
    }
 
+   /** */
    public List<Bitmap> findByTopoId(long topoId) {
       ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
-      File topoImageDireectory = getTopoImageFolder(topoId);
-      if (topoImageDireectory.exists()) {
-         for (File image : topoImageDireectory.listFiles()) {
-            bitmaps.add(BitmapFactory.decodeFile(image.getAbsolutePath()));
-         }
+      for (File image : listImagesOrderedByImageId(topoId)) {
+         bitmaps.add(BitmapFactory.decodeFile(image.getAbsolutePath()));
       }
       return bitmaps;
+   }
+
+   private File[] listImagesOrderedByImageId(long topoId) {
+      File topoImageDirectory = getTopoImageFolder(topoId);
+      if (topoImageDirectory.exists()) {
+         return listFilesOrdered(topoImageDirectory);
+      }
+      return new File[0];
+   }
+
+   private File[] listFilesOrdered(File folder) {
+      File[] files = folder.listFiles();
+      Arrays.sort(files);
+      return files;
    }
 
    private File getTopoImageFolder(long topoId) {
@@ -54,11 +74,10 @@ public class ImageRepository {
    }
 
    protected File getBaseFolder() {
-      return new File(applicationBaseFolder, "images");
+      return new File(applicationBaseFolder, IMAGES_BASE_FOLDER);
    }
 
-   public Bitmap get(long topoId, long imageId) {
-      File image = new File(getTopoImageFolder(topoId), "img_" + imageId);
-      return BitmapFactory.decodeFile(image.getAbsolutePath());
+   protected File image(long topoId, long imageId) {
+      return new File(getTopoImageFolder(topoId), IMG_PREFIX + imageId);
    }
 }

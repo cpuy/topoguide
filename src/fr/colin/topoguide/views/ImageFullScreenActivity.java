@@ -1,22 +1,28 @@
 package fr.colin.topoguide.views;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.ImageView;
-import android.widget.Toast;
+import fr.colin.topoguide.repository.ImageRepository;
 
 public class ImageFullScreenActivity extends Activity {
+   
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       
       long topoId = (Long) getIntent().getExtras().get(getString(R.string.extra_topo_id));
-      int img_id = (Integer) getIntent().getExtras().get(getString(R.string.extra_img_id));
+      int imageId = (Integer) getIntent().getExtras().get(getString(R.string.extra_img_id));
       
-      Toast.makeText(this, "topo " + topoId + " img " + img_id, Toast.LENGTH_SHORT).show();
-      
-      ImageView view = new ImageView(this);
-      view.setImageDrawable(getResources().getDrawable(R.drawable.sure_test));
-      setContentView(view);
+      Bitmap image = new ImageRepository(this).get(topoId, imageId);
+      if (image != null) {
+         ImageView view = new ImageView(this);
+         view.setImageBitmap(image);
+         setContentView(view);
+      } else {
+//         Toast.makeText(this, "Impossible de trouver l'image", LENGTH_SHORT).show();
+         finish();
+      }
    }
 }

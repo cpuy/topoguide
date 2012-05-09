@@ -36,14 +36,12 @@ public class ItineraireTab extends Activity {
    // TODO : to be finished -> pass image in intent with references ... et
    // recharger dans nouvelle activity
    private void fillImagesGridView(final TopoGuide topoGuide) {
-      List<Drawable> asList = Arrays.asList(getResources().getDrawable(R.drawable.sure_test), getResources()
-            .getDrawable(R.drawable.sure_test2));
-      GridView images = (GridView) findViewById(R.id.myGrid);
-      List<Bitmap> findByTopoId = new ImageRepository(this).findByTopoId(topoGuide.id);
+      List<Bitmap> bitmaps = new ImageRepository(this).findByTopoId(topoGuide.id);
 
-      images.setAdapter(new ImagesGridAdapter(this, R.layout.itinerary_grid_item, asList));
+      GridView imagesGrid = (GridView) findViewById(R.id.myGrid);
+      imagesGrid.setAdapter(new ImagesGridAdapter(this, R.layout.itinerary_grid_item, bitmaps));
 
-      images.setOnItemClickListener(new OnItemClickListener() {
+      imagesGrid.setOnItemClickListener(new OnItemClickListener() {
          public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
             startActivity(imageFullScreenIntent(topoGuide, position));
          }

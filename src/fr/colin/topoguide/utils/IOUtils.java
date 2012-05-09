@@ -34,19 +34,6 @@ public class IOUtils {
       o.close();
    }
 
-   public static byte[] inputStreamToBytes(InputStream is) throws IOException
-   {
-      ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-      int nRead;
-      byte[] data = new byte[16384];
-      while ((nRead = is.read(data, 0, data.length)) != -1) {
-        buffer.write(data, 0, nRead);
-      }
-      buffer.flush();
-      is.close();
-      return buffer.toByteArray();
-   }
-   
    public static void writeInFile(InputStream in, File file) {
       InputStreamReader streamReader = new InputStreamReader(in);
       FileWriter writer;
