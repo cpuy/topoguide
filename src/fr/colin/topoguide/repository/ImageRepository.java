@@ -56,4 +56,9 @@ public class ImageRepository {
    protected File getBaseFolder() {
       return new File(applicationBaseFolder, "images");
    }
+
+   public Bitmap get(long topoId, long imageId) {
+      File image = new File(getTopoImageFolder(topoId), "img_" + imageId);
+      return BitmapFactory.decodeFile(image.getAbsolutePath());
+   }
 }
