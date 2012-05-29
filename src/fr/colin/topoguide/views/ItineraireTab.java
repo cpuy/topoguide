@@ -6,18 +6,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
 import fr.colin.topoguide.model.Itineraire;
 import fr.colin.topoguide.model.TopoGuide;
 import fr.colin.topoguide.repository.ImageRepository;
 import fr.colin.topoguide.repository.RepositoryException;
 import fr.colin.topoguide.views.adapter.ImagesGridAdapter;
-import fr.colin.topoguide.views.adapter.VarianteListAdapter;
 
 public class ItineraireTab extends Activity {
 
@@ -67,10 +67,21 @@ public class ItineraireTab extends Activity {
    }
 
    private void fillVariantes(List<Itineraire> variantes) {
-      ListView list = (ListView) findViewById(R.id.itineraire_variantes);
-      TextView header = new TextView(this);
-      header.setText("Variantes");
-      list.addHeaderView(header);
-      list.setAdapter(new VarianteListAdapter(this, variantes));
+      ViewGroup list = (ViewGroup) findViewById(R.id.itineraire_variantes);
+      LayoutInflater inflater = LayoutInflater.from(this);
+      for (Itineraire variante : variantes) {
+         View view = inflater.inflate(R.layout.itineraire_list_item, null);
+         setText(view, R.id.variante_voie, variante.voie);
+         setText(view, R.id.variante_denivele, variante.denivele);
+         setText(view, R.id.variante_difficulte_ski, variante.difficulteSki);
+         setText(view, R.id.variante_orientation, variante.orientation);
+         setText(view, R.id.variante_description, variante.description);
+         list.addView(view);
+      }
+   }
+
+   private void setText(View parentView, int viewId, Object text) {
+      TextView view = (TextView) parentView.findViewById(viewId);
+      view.setText(String.valueOf(text));
    }
 }
