@@ -1,30 +1,34 @@
 package fr.colin.topoguide.views;
 
+import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 import fr.colin.topoguide.model.TopoGuide;
 
 public class TopoGuideDetailsTabs extends TabActivity {
-
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.onglets);
-      
-      Bundle extras = getIntent().getExtras();
-      
-      TopoGuide topo = (TopoGuide) extras.getParcelable("current_topo");
-      Intent intent = new Intent(this, TopoGuideDetails.class);
-      intent.putExtra("current_topo", topo);
 
+      TopoGuide topo = (TopoGuide) getIntent().getExtras().getParcelable(getString(R.string.extra_current_topo));
       TabHost tabHost = getTabHost();
-      Resources res = getResources();
-      tabHost.addTab(tabHost.newTabSpec("infos").setIndicator(res.getString(R.string.tab_info)).setContent(new Intent(this, Infos.class).putExtra("current_topo", topo)));
-      tabHost.addTab(tabHost.newTabSpec("acces").setIndicator(res.getString(R.string.tab_acces)).setContent(intent));
-      tabHost.addTab(tabHost.newTabSpec("itinerary").setIndicator(res.getString(R.string.tab_itinerary)).setContent(new Intent(this, ItineraireTab.class).putExtra("current_topo", topo)));
+      tabHost.addTab(tab("infos", R.string.tab_info, TabInfos.class, topo));  
+      tabHost.addTab(tab("depart", R.string.tab_depart, TabDepart.class, topo));  
+      tabHost.addTab(tab("itinerary", R.string.tab_itinerary, TabItineraire.class, topo));
+   }
+
+   private TabSpec tab(String tabSpecTag, int tabNameStringId,
+         Class<? extends Activity> activityClass, TopoGuide topo) {
+      return getTabHost().newTabSpec(tabSpecTag).setIndicator(getResources().getString(tabNameStringId))
+            .setContent(tabIntent(activityClass, topo));
+   }
+
+   private Intent tabIntent(Class<? extends Activity> activityClass, TopoGuide topo) {
+      return new Intent(this, activityClass).putExtra(getString(R.string.extra_current_topo), topo);
    }
 }

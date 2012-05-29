@@ -5,17 +5,17 @@ import android.os.Bundle;
 import android.widget.TextView;
 import fr.colin.topoguide.model.TopoGuide;
 
-public class Infos extends Activity {
+public class TabDepart extends Activity {
 
-
+   
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.topo_detail_infos);
+      setContentView(R.layout.topoguide_details);
+      
       Bundle extras = getIntent().getExtras();
       TopoGuide topoGuide = (TopoGuide) extras.getParcelable("current_topo");
-      ((TextView) findViewById(R.id.infos_massif)).setText(topoGuide.sommet.massif);
-      ((TextView) findViewById(R.id.infos_secteur)).setText(topoGuide.sommet.secteur);
-      ((TextView) findViewById(R.id.infos_orientation)).setText(topoGuide.itineraire.orientation.value());
+      TextView tv = (TextView) findViewById(R.id.tvDetail);
+      tv.setText("Hello, Topo \nid: " + topoGuide.id +  "\nNom: " + topoGuide.nom + "\nMassif: " + topoGuide.sommet.massif + "\nAccess:" + topoGuide.depart.acces);
    }
 }

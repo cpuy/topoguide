@@ -19,7 +19,7 @@ import fr.colin.topoguide.repository.ImageRepository;
 import fr.colin.topoguide.repository.RepositoryException;
 import fr.colin.topoguide.views.adapter.ImagesGridAdapter;
 
-public class ItineraireTab extends Activity {
+public class TabItineraire extends Activity {
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class ItineraireTab extends Activity {
          }
 
          private Intent imageFullScreenIntent(final TopoGuide topoGuide, int position) {
-            Intent intent = new Intent(ItineraireTab.this, ImageFullScreenActivity.class);
+            Intent intent = new Intent(TabItineraire.this, ImageFullScreenActivity.class);
             intent.putExtra(getString(R.string.extra_topo_id), topoGuide.id);
             intent.putExtra(getString(R.string.extra_img_id), position);
             return intent;

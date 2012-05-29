@@ -3,6 +3,7 @@
 
 	<string name="extra_topo_id">topo_id</string>
 	<string name="extra_img_id">img_id</string>
+	<string name="extra_current_topo">current_topo</string>
 	
 	
 	
@@ -18,7 +19,7 @@
 	<string name="cancel">Annuler</string>
 	
 	<string name="tab_info">Infos</string>
-	<string name="tab_acces">Acces</string>
+	<string name="tab_depart">Depart</string>
 	<string name="tab_itinerary">Itineraire</string>
 	
 	<string name="infos_massif">Massif :</string>
@@ -38,6 +39,16 @@
 	<string name="variante_ski_label">"Ski : "</string>
 	<string name="variante_orientation_label">"Orientation : "</string>
 	<string name="m">m</string>
+	<string name="infos_denivele">Dénivelé</string>
+	<string name="infos_difficulte_monte">Difficulté de montée</string>
+	<string name="infos_difficulte_ski">Difficulté ski</string>
+	<string name="infos_nb_jours">Nb de jours</string>
+	<string name="infos_type">Type</string>
+	<string name="infos_materiel">Matériel</string>
+	<string name="infos_pente">Pente</string>
+	<string name="infos_exposition">Exposition</string>
+	<string name="infos_altitude_depart">Altitude depart</string>
+	<string name="infos_depart">Depart</string>
 
 	
 </resources>

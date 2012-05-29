@@ -5,27 +5,146 @@
     android:stretchColumns="1" >
 
     <TableRow>
+
         <TextView
             android:padding="3dip"
             android:text="@string/infos_massif" />
 
-        <TextView android:id="@+id/infos_massif" android:padding="3dip" />
+        <TextView
+            android:id="@+id/infos_massif"
+            android:padding="3dip" />
     </TableRow>
 
     <TableRow>
+
         <TextView
             android:padding="3dip"
             android:text="@string/infos_secteur" />
 
-        <TextView android:id="@+id/infos_secteur" android:padding="3dip" />
+        <TextView
+            android:id="@+id/infos_secteur"
+            android:padding="3dip" />
     </TableRow>
 
     <TableRow>
+
         <TextView
             android:padding="3dip"
             android:text="@string/infos_orientation" />
 
-        <TextView android:id="@+id/infos_orientation" android:padding="3dip" />
+        <TextView
+            android:id="@+id/infos_orientation"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:padding="3dip"
+            android:text="@string/infos_denivele" />
+
+        <TextView
+            android:id="@+id/infos_denivele"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:padding="3dip"
+            android:text="@string/infos_difficulte_monte" />
+
+        <TextView
+            android:id="@+id/infos_difficulte_monte"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:padding="3dip"
+            android:text="@string/infos_difficulte_ski" />
+
+        <TextView
+            android:id="@+id/infos_difficulte_ski"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:padding="3dip"
+            android:text="@string/infos_nb_jours" />
+
+        <TextView
+            android:id="@+id/infos_nb_jours"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:padding="3dip"
+            android:text="@string/infos_type" />
+
+        <TextView
+            android:id="@+id/infos_type"
+            android:padding="3dip" />
+    </TableRow>
+    
+        <TableRow>
+
+        <TextView
+            android:padding="3dip"
+            android:text="@string/infos_materiel" />
+
+        <TextView
+            android:id="@+id/infos_materiel"
+            android:padding="3dip" />
+    </TableRow>
+    
+            <TableRow>
+
+        <TextView
+            android:padding="3dip"
+            android:text="@string/infos_depart" />
+
+        <TextView
+            android:id="@+id/infos_depart"
+            android:padding="3dip" />
+    </TableRow>
+    
+                <TableRow>
+
+        <TextView
+            android:padding="3dip"
+            android:text="@string/infos_altitude_depart" />
+
+        <TextView
+            android:id="@+id/infos_altitude_depart"
+            android:padding="3dip" />
+    </TableRow>
+    
+                    <TableRow>
+
+        <TextView
+            android:padding="3dip"
+            android:text="@string/infos_exposition" />
+
+        <TextView
+            android:id="@+id/infos_exposition"
+            android:padding="3dip" />
+    </TableRow>
+    
+                        <TableRow>
+
+        <TextView
+            android:padding="3dip"
+            android:text="@string/infos_pente" />
+
+        <TextView
+            android:id="@+id/infos_pente"
+            android:padding="3dip" />
     </TableRow>
 
 </TableLayout>
