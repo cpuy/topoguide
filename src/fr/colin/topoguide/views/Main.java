@@ -19,7 +19,7 @@ import fr.colin.topoguide.views.adapter.TopoGuideListAdapter;
  * @author colin
  * 
  */
-public class TopoGuideActivity extends ListActivity {
+public class Main extends ListActivity {
    private static final int ACTIVITY_EDIT = 1;
 
    private static final int INSERT_ID = Menu.FIRST;

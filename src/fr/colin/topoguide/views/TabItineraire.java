@@ -24,12 +24,12 @@ public class TabItineraire extends Activity {
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.itineraire);
-      TopoGuide topoGuide = (TopoGuide) getIntent().getExtras().getParcelable("current_topo");
-      fillPage(topoGuide);
+      setContentView(R.layout.tab_itineraire);
+      TopoGuide topo = (TopoGuide) getIntent().getExtras().getParcelable(getString(R.string.extra_current_topo));
+      fillView(topo);
    }
 
-   private void fillPage(TopoGuide topoGuide) {
+   private void fillView(TopoGuide topoGuide) {
       fillImagesGridView(topoGuide);
       fillItineraireInformations(topoGuide.itineraire);
       fillVariantes(topoGuide.variantes);
@@ -39,7 +39,7 @@ public class TabItineraire extends Activity {
       try {
          List<Bitmap> bitmaps = new ImageRepository(this).findByTopoId(topoGuide.id);
          GridView imagesGrid = (GridView) findViewById(R.id.myGrid);
-         imagesGrid.setAdapter(new ImagesGridAdapter(this, R.layout.itineraire_grid_item, bitmaps));
+         imagesGrid.setAdapter(new ImagesGridAdapter(this, R.layout.tab_itineraire_image, bitmaps));
          imagesGrid.setOnItemClickListener(imageGridClickListener(topoGuide));
       } catch (RepositoryException e) {
          // media not readable
@@ -70,7 +70,7 @@ public class TabItineraire extends Activity {
       ViewGroup list = (ViewGroup) findViewById(R.id.itineraire_variantes);
       LayoutInflater inflater = LayoutInflater.from(this);
       for (Itineraire variante : variantes) {
-         View view = inflater.inflate(R.layout.itineraire_list_item, null);
+         View view = inflater.inflate(R.layout.tab_itineraire_variante, null);
          setText(view, R.id.variante_voie, variante.voie);
          setText(view, R.id.variante_denivele, variante.denivele);
          setText(view, R.id.variante_difficulte_ski, variante.difficulteSki);
