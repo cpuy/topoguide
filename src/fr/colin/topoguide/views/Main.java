@@ -106,7 +106,7 @@ public class Main extends ListActivity {
    @Override
    protected void onListItemClick(ListView l, View v, int position, long id) {
       super.onListItemClick(l, v, position, id);
-      Intent i = new Intent(this, TopoGuideDetailsTabs.class);
+      Intent i = new Intent(this, Tabs.class);
       i.putExtra("current_topo", topoguideRepository.findTopoById(id));
       startActivity(i);
    }

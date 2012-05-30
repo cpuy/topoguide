@@ -8,12 +8,12 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import fr.colin.topoguide.model.TopoGuide;
 
-public class TopoGuideDetailsTabs extends TabActivity {
+public class Tabs extends TabActivity {
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.onglets);
+      setContentView(R.layout.tabs);
 
       TopoGuide topo = (TopoGuide) getIntent().getExtras().getParcelable(getString(R.string.extra_current_topo));
       TabHost tabHost = getTabHost();
