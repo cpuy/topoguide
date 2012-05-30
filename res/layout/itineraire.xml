@@ -4,20 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <!--
-         <GridView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/myGrid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnWidth="60dp"
-        android:gravity="center"
-        android:horizontalSpacing="10dp"
-        android:numColumns="3"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" />
-    -->
-
     <GridView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/myGrid"
@@ -41,12 +27,4 @@
         android:layout_weight="1"
         android:orientation="vertical" />
 
-        <!--
-         <ListView
-        android:id="@+id/itineraire_variantes"
-        android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1" />
-        -->
-
-    </LinearLayout>
+</LinearLayout>
