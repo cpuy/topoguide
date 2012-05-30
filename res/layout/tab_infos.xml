@@ -91,8 +91,8 @@
             android:id="@+id/infos_type"
             android:padding="3dip" />
     </TableRow>
-    
-        <TableRow>
+
+    <TableRow>
 
         <TextView
             android:padding="3dip"
@@ -102,8 +102,8 @@
             android:id="@+id/infos_materiel"
             android:padding="3dip" />
     </TableRow>
-    
-            <TableRow>
+
+    <TableRow>
 
         <TextView
             android:padding="3dip"
@@ -113,8 +113,8 @@
             android:id="@+id/infos_depart"
             android:padding="3dip" />
     </TableRow>
-    
-                <TableRow>
+
+    <TableRow>
 
         <TextView
             android:padding="3dip"
@@ -124,8 +124,8 @@
             android:id="@+id/infos_altitude_depart"
             android:padding="3dip" />
     </TableRow>
-    
-                    <TableRow>
+
+    <TableRow>
 
         <TextView
             android:padding="3dip"
@@ -135,8 +135,8 @@
             android:id="@+id/infos_exposition"
             android:padding="3dip" />
     </TableRow>
-    
-                        <TableRow>
+
+    <TableRow>
 
         <TextView
             android:padding="3dip"
